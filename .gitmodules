@@ -1,0 +1,3 @@
+[submodule "d4dj_utils/extended"]
+	path = d4dj_utils/extended
+	url = https://github.com/qwewqa/d4dj-extended.git
