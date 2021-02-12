@@ -9,7 +9,7 @@ import msgpack
 import pytz as pytz
 
 import d4dj_utils.master.asset_manager as am
-from d4dj_utils.extended.tools import tools
+import d4dj_utils.extended.tools.tools as tools
 
 KT = TypeVar('KT')
 VT = TypeVar('VT')

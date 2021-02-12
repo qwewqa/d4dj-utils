@@ -7,7 +7,7 @@ import msgpack
 from d4dj_utils.master.chart_master import ChartDifficulty
 from d4dj_utils.master.common_enums import ChartSectionType
 from d4dj_utils.master.master_asset import MasterAsset
-from d4dj_utils.extended.tools import vgmstream
+from d4dj_utils.extended.tools.tools import vgmstream
 
 
 @dataclass
