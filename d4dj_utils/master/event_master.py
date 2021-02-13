@@ -26,9 +26,10 @@ class EventMaster(MasterAsset):
     display_card_id: int
     display_card_type_id: int
     story_unlock_date: msgpack.Timestamp
-    unknown1: Any
-    unknown2: Any
-    unknown3: Any
+    show_exchange_button: bool
+    exchange_shop_id: int
+    is_d4_fes_story: bool
+    top_prefab_path: str
 
     @property
     def event_type(self):
@@ -82,6 +83,10 @@ class EventMaster(MasterAsset):
     def duration(self) -> datetime.timedelta:
         return self.reception_close_datetime - self.start_datetime
 
+    @property
+    def exchange_shop(self):
+        return self.assets.exchange_master.get(self.exchange_shop_id) if self.exchange_shop_id else None
+
     def state(self, time=None):
         if not time:
             time = datetime.datetime.now(datetime.timezone.utc)
@@ -123,9 +128,10 @@ class EventMaster(MasterAsset):
             'display_card': self.display_card,
             'display_card_type': self.display_card_type.name,
             'story_unlock_date': self.story_unlock_datetime,
-            'unknown1': self.unknown1,
-            'unknown2': self.unknown1,
-            'unknown3': self.unknown1,
+            'show_exchange_button': self.show_exchange_button,
+            'exchange_shop': self.exchange_shop,
+            'is_d4_fes_story': self.is_d4_fes_story,
+            'top_prefab_path': self.top_prefab_path,
         }
 
 
