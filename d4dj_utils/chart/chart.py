@@ -176,6 +176,9 @@ class Chart:
         return counts
 
     def render(self) -> Image:
+        if not self.notes:
+            return Image.new('RGB', (1, 1))
+
         super_scale = 2
         scale = 1
 

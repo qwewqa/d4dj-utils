@@ -13,8 +13,8 @@ class MusicMixMaster(MasterAsset):
     start_time_bpm: float
     end_time: float
     end_time_bpm: float
-    unknown1: Any
-    unknown2: Any
+    enable_long_mix_start: bool
+    enable_long_mix_end: bool
 
     @property
     def section(self):
@@ -48,6 +48,6 @@ class MusicMixMaster(MasterAsset):
             'end_time': self.end_time,
             'end_time_bpm': self.end_time_bpm,
             'duration': self.duration,
-            'unknown1': self.unknown1,
-            'unknown2': self.unknown2,
+            'enable_long_mix_start': self.enable_long_mix_start,
+            'enable_long_mix_end': self.enable_long_mix_end,
         }

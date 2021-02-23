@@ -12,7 +12,6 @@ from d4dj_utils.master.mission_group_master import DateSelectCategory
 class ExchangeItemMaster(MasterAsset):
     id: int
     exchange_id: int
-    price: int
     reward_category_id: int
     reward_id: int
     reward_amount: int
@@ -22,14 +21,14 @@ class ExchangeItemMaster(MasterAsset):
     recommended: bool
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
-    unknown1: int
-    unknown2: int
-    unknown3: int
-    unknown4: int
-    unknown5: int
-    unknown6: int
-    unknown7: int
-    unknown8: int
+    required_stock_id_1: int
+    required_stock_amount_1: int
+    required_stock_id_2: int
+    required_stock_amount_2: int
+    required_stock_id_3: int
+    required_stock_amount_3: int
+    required_stock_id_4: int
+    required_stock_amount_4: int
 
     @property
     def exchange(self):
@@ -50,12 +49,27 @@ class ExchangeItemMaster(MasterAsset):
     @property
     def reset_type(self):
         return DateSelectCategory(self.reset_type_id)
-
+    
+    @property
+    def required_stock_1(self):
+        return self.assets.stock_master.get(self.required_stock_id_1)
+    
+    @property
+    def required_stock_2(self):
+        return self.assets.stock_master.get(self.required_stock_id_2)
+    
+    @property
+    def required_stock_3(self):
+        return self.assets.stock_master.get(self.required_stock_id_3)
+    
+    @property
+    def required_stock_4(self):
+        return self.assets.stock_master.get(self.required_stock_id_4)
+    
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
             'exchange': self.exchange,
-            'price': self.price,
             'reward': self.reward_name,
             'reward_amount': self.reward_amount,
             'exchange_count': self.exchange_count,
@@ -65,7 +79,6 @@ class ExchangeItemMaster(MasterAsset):
     def extended_description_items(self) -> Dict[str, Any]:
         return {
             'exchange': self.exchange,
-            'price': self.price,
             'reward': self.reward_name,
             'reward_amount': self.reward_amount,
             'exchange_count': self.exchange_count,
@@ -74,12 +87,12 @@ class ExchangeItemMaster(MasterAsset):
             'recommended': self.recommended,
             'start_date': self.start_datetime,
             'end_date': self.end_datetime,
-            'unknown1': self.assets.stock_master.get(self.unknown1),
-            'unknown2': self.unknown2,
-            'unknown3': self.unknown3,
-            'unknown4': self.unknown4,
-            'unknown5': self.unknown5,
-            'unknown6': self.unknown6,
-            'unknown7': self.unknown7,
-            'unknown8': self.unknown8,
+            'required_stock_1': self.required_stock_1,
+            'required_stock_amount_1': self.required_stock_amount_1,
+            'required_stock_2': self.required_stock_2,
+            'required_stock_amount_2': self.required_stock_amount_2,
+            'required_stock_3': self.required_stock_3,
+            'required_stock_amount_3': self.required_stock_amount_3,
+            'required_stock_4': self.required_stock_4,
+            'required_stock_amount_4': self.required_stock_amount_4,
         }

@@ -25,12 +25,11 @@ class MusicMaster(MasterAsset):
     bpm: int
     open_key: int
     section_trend_id: int
-    enable_long_mix: bool
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
     has_movie: bool
     purchase_bonus_ids: Tuple[int]
-    trigger_music_ids: Tuple[int]
+    is_hidden: bool
     exclude_challenge: bool
     is_tutorial: bool
 
@@ -45,10 +44,6 @@ class MusicMaster(MasterAsset):
     @property
     def unit(self):
         return self.assets.unit_master[self.unit_id]
-
-    @property
-    def trigger_music(self):
-        return [self.assets.music_master[mid] for mid in self.trigger_music_ids]
 
     @property
     def charts(self):
@@ -98,12 +93,11 @@ class MusicMaster(MasterAsset):
             'bpm': self.bpm,
             'open_key': self.open_key,
             'section_trend': self.section_trend.name,
-            'enable_long_mix': self.enable_long_mix,
             'start_date': self.start_datetime,
             'end_date': self.end_datetime,
             'has_movie': self.has_movie,
-            # purchase bonus
-            'trigger_music': '[' + ', '.join(str(m) for m in self.trigger_music) + ']',
+            # 'purchase_bonus'
+            'is_hidden': self.is_hidden,
             'exclude_challenge': self.exclude_challenge,
             'is_tutorial': self.is_tutorial,
             'mix_info': '(' + ', '.join(f'{k.name}: {v}' for k, v in self.mix_info.items()) + ')',

@@ -18,7 +18,7 @@ class ChartSectionType(int, Enum):
     Begin = 1
     Middle = 2
     End = 3
-    Unknown1 = 4
+    DJSimulator = 4
 
 
 class DateSelectCateogry(int, Enum):

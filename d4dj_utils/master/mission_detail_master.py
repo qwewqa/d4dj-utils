@@ -15,6 +15,7 @@ class MissionDetailMaster(MasterAsset):
     condition_values: Tuple[int]
     reward_ids: Tuple[int]
     command_id: int
+    home_priority: int
 
     @property
     def panel(self):
@@ -43,5 +44,6 @@ class MissionDetailMaster(MasterAsset):
             'condition_id': self.condition_id,
             'condition_values': self.condition_values,
             'rewards': '[' + ', '.join(str(r) for r in self.rewards) + ']',
-            'command': self.command
+            'command': self.command,
+            'home_priority': self.home_priority
         }
