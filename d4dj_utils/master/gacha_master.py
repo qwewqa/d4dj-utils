@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from functools import cached_property
 from typing import Dict, Any, Tuple
 
 import msgpack
@@ -59,6 +60,18 @@ class GachaMaster(MasterAsset):
     @property
     def bonus_stock(self):
         return self.assets.stock_master.get(self.bonus_stock_id)
+
+    @cached_property
+    def draw_data(self):
+        return tuple(draw for draw in self.assets.gacha_draw_master.values() if draw.gacha == self)
+
+    @property
+    def event(self):
+        return self.pick_up_cards[0].event if self.pick_up_cards else None
+
+    @property
+    def banner_path(self):
+        return self.assets.path / f'ondemand/gacha/top/banner/{self.id:>05}.png'
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
