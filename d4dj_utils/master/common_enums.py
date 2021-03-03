@@ -61,3 +61,12 @@ class RewardCategory(int, Enum):
         if value:
             return f'{self.name} - {value}'
         return f'{self.name} #{reward_id}'
+
+
+class GachaType(Enum):
+    Normal = 1
+    Tutorial = 2
+    Event = 3
+    Birthday = 4
+    Special = 5
+    Revival = 6

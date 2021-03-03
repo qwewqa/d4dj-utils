@@ -1,5 +1,6 @@
 import logging
 import textwrap
+from collections import defaultdict
 from pathlib import Path
 from typing import Type, Dict, Tuple
 
@@ -44,6 +45,14 @@ class AssetManager:
         self.exchange_item_master: ma.MasterDict[int, ExchangeItemMaster] = self._load_master(ExchangeItemMaster)
         from d4dj_utils.master.exchange_master import ExchangeMaster
         self.exchange_master: ma.MasterDict[int, ExchangeMaster] = self._load_master(ExchangeMaster)
+        from d4dj_utils.master.gacha_draw_master import GachaDrawMaster
+        self.gacha_draw_master: ma.MasterDict[int, GachaDrawMaster] = self._load_master(GachaDrawMaster)
+        from d4dj_utils.master.gacha_master import GachaMaster
+        self.gacha_master: ma.MasterDict[int, GachaMaster] = self._load_master(GachaMaster)
+        from d4dj_utils.master.gacha_table_master import GachaTableMaster
+        self.gacha_table_master: ma.MasterDict[int, GachaTableMaster] = self._load_master(GachaTableMaster)
+        from d4dj_utils.master.gacha_table_rate_master import GachaTableRateMaster
+        self.gacha_table_rate_master: ma.MasterDict[int, GachaTableRateMaster] = self._load_master(GachaTableRateMaster)
         from d4dj_utils.master.mission_group_master import MissionGroupMaster
         self.mission_group_master: ma.MasterDict[int, MissionGroupMaster] = self._load_master(MissionGroupMaster)
         from d4dj_utils.master.mission_detail_master import MissionDetailMaster
@@ -71,6 +80,10 @@ class AssetManager:
         loaded_master_paths = {master.path for master in self.masters.values()}
         for path in sorted(master_paths.difference(loaded_master_paths)):
             self.logger.debug(f'Unknown master file not loaded "{path}".')
+
+        self.gacha_table_master_tables = defaultdict(lambda: [])
+        for gtm in self.gacha_table_master.values():
+            self.gacha_table_master_tables[gtm.table_id].append(gtm)
 
     def __getitem__(self, item):
         return self.masters.__getitem__(item)

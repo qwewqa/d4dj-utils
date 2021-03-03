@@ -1,8 +1,15 @@
+import datetime
+import enum
 from dataclasses import dataclass
-from typing import Dict, Any, Tuple
+from functools import cached_property
+from typing import Dict, Any, Tuple, Optional
 
 import msgpack
+import pytz
 
+from d4dj_utils.master.common_enums import GachaType
+from d4dj_utils.master.event_master import EventMaster
+from d4dj_utils.master.gacha_master import GachaMaster
 from d4dj_utils.master.master_asset import MasterAsset
 
 
@@ -58,6 +65,39 @@ class CardMaster(MasterAsset):
     def icon_path(self, limit_break):
         return self.assets.path / f'ondemand/card_icon/card_icon_{str(self.id).zfill(9)}_{1 if limit_break else 0}.jpg'
 
+    initial_card_cutoff = pytz.timezone('Asia/Tokyo').localize(datetime.datetime(year=2020, month=10, day=1))
+
+    @cached_property
+    def gacha(self) -> Optional[GachaMaster]:
+        return next((gacha for gacha in self.assets.gacha_master.values()
+                     if self in gacha.pick_up_cards and
+                     '1人★4確定' not in gacha.name), None)
+
+    @cached_property
+    def event(self) -> Optional[EventMaster]:
+        return next((event for event in self.assets.event_master.values()
+                     if abs((event.start_datetime - self.start_datetime).total_seconds()) <= 86400 and
+                     (event.bonus.attribute == self.attribute or not event.bonus.attribute) and
+                     (self.character in event.bonus.characters or not event.bonus.characters)), None)
+
+    @cached_property
+    def availability(self):
+        if self.start_datetime < self.initial_card_cutoff:
+            return CardAvailability.Permanent
+        if gacha := self.gacha:
+            if gacha.gacha_type == GachaType.Birthday:
+                return CardAvailability.Birthday
+            elif self.event:
+                if '期間限定' in gacha.summary:
+                    return CardAvailability.Limited
+                elif 'コラボ限定' in gacha.summary:
+                    return CardAvailability.Collab
+                else:
+                    return CardAvailability.Permanent
+        elif self == self.event.display_card:
+            return CardAvailability.Welfare
+        return CardAvailability.Unknown
+
     @property
     def name_description(self) -> str:
         return f'{self.name} {self.character.first_name_english} ({self.id})'
@@ -90,3 +130,12 @@ class CardMaster(MasterAsset):
             'head_x': self.head_x,
             'head_y': self.head_y
         }
+
+
+class CardAvailability(enum.Enum):
+    Unknown = enum.auto()
+    Permanent = enum.auto()
+    Limited = enum.auto()
+    Collab = enum.auto()
+    Birthday = enum.auto()
+    Welfare = enum.auto()
