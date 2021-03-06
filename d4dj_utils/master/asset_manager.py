@@ -1,3 +1,4 @@
+import inspect
 import logging
 import textwrap
 from collections import defaultdict
@@ -11,7 +12,8 @@ from d4dj_utils.chart.chart import load_chart
 
 
 class AssetManager:
-    def __init__(self, path):
+    def __init__(self, path, drop_extra_fields: bool = False):
+        self.drop_extra_fields = drop_extra_fields
         self.logger = logging.getLogger(__name__)
         self.path = Path(path)
         self.masters: Dict[str, ma.MasterDict] = {}
@@ -97,10 +99,19 @@ class AssetManager:
 
     def _load_master(self, cls: Type) -> ma.MasterDict:
         name = cls.__name__
+        # -1 for self, and -1 for the asset_manager argument.
+        # What remains is the number of arguments to keep from the msgpack file itself.
+        argument_count = len(inspect.signature(cls.__init__).parameters) - 2
         asset_path = self.path / f'Master/{name}.msgpack'
         with asset_path.open('rb') as f:
             data = msgpack.load(f, strict_map_key=False, use_list=False)
-        master_dict = ma.MasterDict({k: cls(self, *v) for k, v in data.items()}, name, asset_path)
+        if self.drop_extra_fields:
+            if len(next(iter(data.values()))) != argument_count:
+                self.logger.info(f'Dropping extra arguments from {name}.')
+            master_dict = ma.MasterDict({k: cls(self, *(v[:argument_count])) for k, v in data.items()}, name,
+                                        asset_path)
+        else:
+            master_dict = ma.MasterDict({k: cls(self, *v) for k, v in data.items()}, name, asset_path)
         self.masters[name] = master_dict
         return master_dict
 
