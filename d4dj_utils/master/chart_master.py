@@ -1,12 +1,12 @@
+import math
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import List, Dict, Any, Tuple, Optional
-import math
 
 from PIL import Image, ImageDraw
 
-from d4dj_utils.chart.chart import Chart
+from d4dj_utils.chart.chart import Chart, ChartCommonData
 from d4dj_utils.master.common_enums import ChartSectionType
 from d4dj_utils.master.master_asset import MasterAsset
 
@@ -80,6 +80,10 @@ class ChartMaster(MasterAsset):
         return self.assets.path / 'ondemand' / 'chart' / f'chart_{str(self.id).zfill(8)}'
 
     @property
+    def common_data_path(self) -> Path:
+        return self.assets.path / 'ondemand' / 'chart' / f'chart_{str(self.id).zfill(8)[:-1]}0'
+
+    @property
     def image_path(self) -> Path:
         return self.chart_path.with_suffix('.png')
 
@@ -89,13 +93,39 @@ class ChartMaster(MasterAsset):
 
     def load_chart_data(self):
         with self.chart_path.open('rb') as f:
-            return Chart.from_msgpack(f.read())
+            try:
+                with self.common_data_path.open('rb') as cdf:
+                    info = ChartCommonData.from_msgpack(cdf.read()).get_chart_info(self)
+            except FileNotFoundError:
+                if self.music.duration:
+                    info = ChartCommonData.get_default_for_chart(self).get_chart_info(self)
+                else:
+                    info = None
+            return Chart.from_msgpack(f.read(), info)
+
+    def load_common_data(self):
+        try:
+            with self.common_data_path.open('rb') as cdf:
+                return ChartCommonData.from_msgpack(cdf.read())
+        except FileNotFoundError:
+            if self.music.duration:
+                return ChartCommonData.get_default_for_chart(self)
+            else:
+                return None
 
     def load_sections(self) -> Optional[List[Chart]]:
         if not self.mix_info:
             return None
         chart = self.load_chart_data()
-        return [chart.trim(mi.start_time - 0.001, mi.end_time - 0.001) for mi in self.mix_info.values()]
+        return [chart.trim(mi.start_time - 60 / mi.start_time_bpm / 8, mi.end_time - 60 / mi.end_time_bpm / 8) for mi in
+                self.mix_info.values()]
+
+    def load_section(self, section) -> Optional[List[Chart]]:
+        if not self.mix_info:
+            return None
+        chart = self.load_chart_data()
+        mi = self.mix_info[section]
+        return chart.trim(mi.start_time - 60 / mi.start_time_bpm / 8, mi.end_time - 60 / mi.end_time_bpm / 8)
 
     @staticmethod
     def render_sections(sections: List[Chart]) -> Image:

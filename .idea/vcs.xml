@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/assets" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/d4dj_utils/extended" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/d4dj_utils/extended/scripts/assets" vcs="Git" />
   </component>
 </project>

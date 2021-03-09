@@ -8,7 +8,7 @@ from typing import Type, Dict, Tuple
 import msgpack
 
 import d4dj_utils.master.master_asset as ma
-from d4dj_utils.chart.chart import load_chart
+from d4dj_utils.chart.chart import Chart
 
 
 class AssetManager:
@@ -71,6 +71,8 @@ class AssetManager:
         self.reward_master: ma.MasterDict[int, RewardMaster] = self._load_master(RewardMaster)
         from d4dj_utils.master.skill_master import SkillMaster
         self.skill_master: ma.MasterDict[int, SkillMaster] = self._load_master(SkillMaster)
+        from d4dj_utils.master.stamp_master import StampMaster
+        self.stamp_master: ma.MasterDict[int, StampMaster] = self._load_master(StampMaster)
         from d4dj_utils.master.stock_master import StockMaster
         self.stock_master: ma.MasterDict[int, StockMaster] = self._load_master(StockMaster)
         from d4dj_utils.master.stock_view_category_master import StockViewCategoryMaster
@@ -124,33 +126,37 @@ class AssetManager:
                 f.write(master.formatted())
                 self.logger.info(f'Dumped master {master.name}')
 
-    def render_charts_by_master(self):
+    def render_charts_by_master(self, force_update: bool = False):
         """
         Renders charts based on values within charts master.
         This includes mix data but may miss some chart files that have been released without being added to masters.
         """
         for chart_mas in self.chart_master.values():
-            chart = chart_mas.load_chart_data()
-            image_path = chart_mas.image_path
-            mix_path = chart_mas.mix_path
-            mix_sections = chart_mas.load_sections()
-            if image_path.exists() and (mix_path.exists() or not mix_sections):
-                self.logger.debug(f'Chart already processed at "{image_path}".')
-                continue
-            chart.render().save(image_path)
-            self.logger.info(f'Chart rendered at "{image_path}".')
-            if mix_sections:
-                chart_mas.render_sections(mix_sections).save(mix_path)
-                self.logger.info(f'Mix rendered at "{mix_path}".')
+            try:
+                chart = chart_mas.load_chart_data()
+                image_path = chart_mas.image_path
+                mix_path = chart_mas.mix_path
+                mix_sections = chart_mas.load_sections()
+                if not force_update and (image_path.exists() and (mix_path.exists() or not mix_sections)):
+                    self.logger.debug(f'Chart already processed at "{image_path}".')
+                    continue
+                chart.render().save(image_path)
+                self.logger.info(f'Chart rendered at "{image_path}".')
+                if mix_sections:
+                    chart_mas.render_sections(mix_sections).save(mix_path)
+                    self.logger.info(f'Mix rendered at "{mix_path}".')
+            except:
+                self.logger.warning(f'Failed to render chart {chart_mas.id}.')
 
     def render_charts_by_file(self):
         charts_path = self.path / 'ondemand' / 'chart'
-        for path in charts_path.glob('chart_*[1-4]'):
-            out_path = path.with_suffix('.png')
-            if out_path.exists():
-                self.logger.debug(f'Chart already processed at "{path}".')
-                continue
-            with path.open('rb') as f:
-                chart = load_chart(f)
-            chart.render().save(out_path)
-            self.logger.info(f'Chart rendered at "{path}".')
+        for common_data_path in charts_path.glob('chart_*0'):
+            for path in charts_path.glob(f'{common_data_path.name[:-1]}[1-4]'):
+                out_path = path.with_suffix('.png')
+                if out_path.exists():
+                    self.logger.debug(f'Chart already processed at "{path}".')
+                    continue
+                with path.open('rb') as f:
+                    chart = Chart.from_msgpack(f.read(), None)
+                chart.render().save(out_path)
+                self.logger.info(f'Chart rendered at "{path}".')

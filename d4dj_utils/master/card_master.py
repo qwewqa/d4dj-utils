@@ -87,13 +87,12 @@ class CardMaster(MasterAsset):
         if gacha := self.gacha:
             if gacha.gacha_type == GachaType.Birthday:
                 return CardAvailability.Birthday
-            elif self.event:
-                if '期間限定' in gacha.summary:
-                    return CardAvailability.Limited
-                elif 'コラボ限定' in gacha.summary:
-                    return CardAvailability.Collab
-                else:
-                    return CardAvailability.Permanent
+            elif '期間限定' in gacha.summary:
+                return CardAvailability.Limited
+            elif 'コラボ限定' in gacha.summary:
+                return CardAvailability.Collab
+            else:
+                return CardAvailability.Permanent
         elif self == self.event.display_card:
             return CardAvailability.Welfare
         return CardAvailability.Unknown

@@ -1,13 +1,20 @@
+import contextlib
+import wave
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Any, Tuple
+from functools import cached_property
+from typing import Dict, Any, Tuple, Optional
 
 import msgpack
 
 from d4dj_utils.master.chart_master import ChartDifficulty
 from d4dj_utils.master.common_enums import ChartSectionType
 from d4dj_utils.master.master_asset import MasterAsset
-from d4dj_utils.extended.tools.tools import vgmstream
+
+try:
+    from d4dj_utils.extended.tools.tools import vgmstream
+except (ImportError, ModuleNotFoundError):
+    vgmstream = None
 
 
 @dataclass
@@ -62,6 +69,20 @@ class MusicMaster(MasterAsset):
     @property
     def audio_path(self):
         return self.assets.path / f'plain/music/music_{str(self.id).zfill(7)}.acb'
+
+    @cached_property
+    def duration(self) -> Optional[float]:
+        try:
+            wav_path = self.audio_path.with_name(self.audio_path.name + '.wav')
+            if not wav_path.exists():
+                self.decode_audio()
+            with contextlib.closing(wave.open(str(wav_path), 'r')) as f:
+                frames = f.getnframes()
+                rate = f.getframerate()
+                duration = frames / float(rate)
+                return duration
+        except:
+            return None
 
     def decode_audio(self):
         # This doesn't decrypt, but we only need durations from the resulting wav

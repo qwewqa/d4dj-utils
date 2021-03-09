@@ -9,7 +9,11 @@ import msgpack
 import pytz as pytz
 
 import d4dj_utils.master.asset_manager as am
-import d4dj_utils.extended.tools.tools as tools
+
+try:
+    import d4dj_utils.extended.tools.tools as tools
+except (ImportError, ModuleNotFoundError):
+    tools = None
 
 KT = TypeVar('KT')
 VT = TypeVar('VT')

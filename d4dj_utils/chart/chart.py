@@ -1,11 +1,17 @@
+from __future__ import annotations
+
 import dataclasses
 import math
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List, TYPE_CHECKING, Sequence
 
 import msgpack
 from PIL import Image, ImageDraw
+
+if TYPE_CHECKING:
+    from d4dj_utils.master.chart_master import ChartDifficulty, ChartMaster
+    from d4dj_utils.master.music_master import MusicMaster
 
 
 class SoflanDiskTarget(Enum):
@@ -93,30 +99,89 @@ class SoflanData:
 
 
 @dataclass
-class Chart:
-    song: str
-    soflans: Tuple[SoflanData]
-    bar_lines: Tuple[float]
-    notes: Tuple[NoteData]
+class ChartCommonData:
+    sd_rhythm_times: Sequence[float]
+    skill_times: Sequence[float]
+    audience_data: Sequence[Tuple[float, int]]
+    fever_prepare_time: float
+    fever_time: float
+    club_item_triggers: Sequence[float]
 
     @classmethod
     def from_msgpack(cls, data: bytes):
         data = msgpack.unpackb(data)
+        return cls(*data)
+
+    @classmethod
+    def get_default_for_chart(cls, chart: ChartMaster):
+        return cls([],
+                   [],
+                   [],
+                   chart.music.duration * 0.7 - 10,
+                   chart.music.duration * 0.7,
+                   [])
+
+    def get_chart_info(self, chart: ChartMaster):
+        try:
+            from d4dj_utils.extended.chart.chart_info import get_chart_info
+        except ImportError as e:
+            raise RuntimeError('Extended features not available.') from e
+        return get_chart_info(self, chart)
+
+    @classmethod
+    def get_skill_times(cls, skill_times, start_time: float, end_time: float):
+        try:
+            from d4dj_utils.extended.chart.chart_info import get_skill_times
+        except ImportError as e:
+            raise RuntimeError('Extended features not available.') from e
+        return get_skill_times(skill_times, start_time, end_time)
+
+
+@dataclass
+class ChartInfo:
+    start_time: float
+    end_time: float
+    skill_times: List[float]
+    fever_start: float
+    fever_end: float
+    level: float
+
+
+@dataclass
+class Chart:
+    song: str
+    soflans: Sequence[SoflanData]
+    bar_lines: Sequence[float]
+    notes: Sequence[NoteData]
+    info: Optional[ChartInfo] = None
+
+    @classmethod
+    def from_msgpack(cls, data: bytes, info: Optional[ChartInfo]):
+        data = msgpack.unpackb(data)
         data[1] = [SoflanData.from_serialized(sof) for sof in data[1]]
         data[3] = [NoteData.from_serialized(note) for note in data[3]]
-        return cls(*data[0:4])
+        return cls(*data[0:4], info=info)
 
-    def trim(self, start_time: float, end_time: float):
-        soflans = tuple(dataclasses.replace(soflan, time=soflan.time - start_time)
+    @classmethod
+    def create_mix(cls, songs: List[MusicMaster], diffs: List[ChartDifficulty]):
+        try:
+            from d4dj_utils.extended.chart.create_mix import create_mix
+        except ImportError as e:
+            raise RuntimeError('Extended features not available.') from e
+        return create_mix(songs, diffs)
+
+    def trim(self, start_time: float, end_time: float, shift_time: bool = True):
+        shift = -start_time if shift_time else 0
+        soflans = tuple(dataclasses.replace(soflan, time=soflan.time + shift)
                         for soflan in self.soflans if start_time <= soflan.time <= end_time)
-        bar_lines = tuple(bar - start_time for bar in self.bar_lines if start_time <= bar <= end_time)
+        bar_lines = tuple(bar + shift for bar in self.bar_lines if start_time <= bar <= end_time)
         notes = tuple(note.as_resolved() for note in self.notes)
         for note in notes:
             note.finalize(notes)
         notes = tuple(note for note in notes if note.is_in(start_time, end_time))
         notes = tuple(note.to_data(notes) for note in notes)
-        notes = tuple(dataclasses.replace(note, time=note.time - start_time) for note in notes)
-        return Chart(self.song, soflans, bar_lines, notes)
+        notes = tuple(dataclasses.replace(note, time=note.time + shift) for note in notes)
+        return Chart(self.song, soflans, bar_lines, notes, None)
 
     def get_note_counts(self):
         counts = {
@@ -177,12 +242,12 @@ class Chart:
 
     def render(self) -> Image:
         if not self.notes:
-            return Image.new('RGB', (1, 1))
+            return Image.new('RGBA', (1, 1))
 
         super_scale = 2
         scale = 1
 
-        width = 200
+        width = 210
         height_per_second = 150
         padding = 15
         lane_width = 25
@@ -200,20 +265,37 @@ class Chart:
         barline_width = int(barline_width * scale * super_scale)
         max_height = int(max_height * scale * super_scale)
 
-        height = math.ceil(max(note.time for note in self.notes) * height_per_second + 2 * padding)
-        img = Image.new('RGB', (width, height))
+        if self.info:
+            height = int(self.info.end_time * height_per_second + 2 * padding)
+        else:
+            height = int(max(note.time for note in self.notes) * height_per_second + 2 * padding)
+        img = Image.new('RGBA', (width, height))
         draw = ImageDraw.Draw(img)
 
+        # Groovy
+        if self.info:
+            start_y = height - (self.info.fever_start * height_per_second + padding)
+            end_y = height - (self.info.fever_end * height_per_second + padding)
+            draw.rectangle((-3.8 * lane_width + width / 2, start_y, 3.8 * lane_width + width / 2, end_y),
+                           fill=(0, 200, 150))
+
+        # Lanes, both middle and disc
         draw.rectangle((-3.5 * lane_width + width / 2, 0, 3.5 * lane_width + width / 2, height), fill=(30, 30, 30))
         draw.rectangle((-3.5 * lane_width + width / 2, 0, -2.5 * lane_width + width / 2, height), fill=(60, 60, 60))
         draw.rectangle((2.5 * lane_width + width / 2, 0, 3.5 * lane_width + width / 2, height), fill=(60, 60, 60))
 
+        # Vertical lane separators
         for i in range(8):
             line_x = (i - 3.5) * lane_width + width / 2
             draw.line((line_x, 0, line_x, height), fill=(127, 127, 127), width=lane_separator_width)
 
+        # Start and end lines
         draw.line((0, padding, width, padding), fill=(150, 150, 150), width=barline_width)
-        draw.line((0, height - padding, width, height - padding), fill=(90, 90, 90), width=barline_width)
+        if self.info:
+            line_y = height - int(self.info.start_time * height_per_second) - padding
+            draw.line((0, line_y, width, line_y), fill=(90, 90, 90), width=barline_width)
+        else:
+            draw.line((0, height - padding, width, height - padding), fill=(90, 90, 90), width=barline_width)
 
         def center_coordinate_at(time: float, lane: int):
             return lane_width * (lane - 3) + width / 2, height - (time * height_per_second + padding)
@@ -221,6 +303,41 @@ class Chart:
         def note_center(note: NoteData):
             return center_coordinate_at(note.time, note.lane)
 
+        if self.info:
+            skill_bars = self.info.skill_times
+            skill_image = Image.new('RGBA', img.size, (255, 255, 255, 0))
+            draw_skill = ImageDraw.Draw(skill_image)
+            for i, bar_time in enumerate(skill_bars):
+                # Skill bar
+                bar_y = height - (bar_time * height_per_second + padding)
+
+                # Skill end bar
+                end_bar_y = bar_y - 9 * height_per_second
+                if i < 4 and end_bar_y < height - (skill_bars[i + 1] * height_per_second + padding):
+                    # Next skill overlaps
+                    end_bar_y = height - (skill_bars[i + 1] * height_per_second + padding)
+
+                draw_skill.polygon((-3.5 * lane_width + width / 2, bar_y, -2.5 * lane_width + width / 2, bar_y,
+                                    -2.5 * lane_width + width / 2, end_bar_y, -3.5 * lane_width + width / 2,
+                                    end_bar_y), fill=(255, 255, 255, 70))
+                draw_skill.polygon((2.5 * lane_width + width / 2, bar_y, 3.5 * lane_width + width / 2, bar_y,
+                                    3.5 * lane_width + width / 2, end_bar_y, 2.5 * lane_width + width / 2,
+                                    end_bar_y), fill=(255, 255, 255, 70))
+                draw_skill.polygon((-2.5 * lane_width + width / 2, bar_y, 2.5 * lane_width + width / 2, bar_y,
+                                    2.5 * lane_width + width / 2, end_bar_y, -2.5 * lane_width + width / 2,
+                                    end_bar_y), fill=(255, 255, 255, 10))
+
+                draw_skill.line((0, bar_y, width, bar_y), fill=(212, 17, 89), width=6 * barline_width)
+                draw_skill.line((0, end_bar_y, width, end_bar_y), fill=(26, 133, 255), width=6 * barline_width)
+            img.alpha_composite(skill_image)
+
+            # Groovy start/end lines
+            fever_start_y = height - (self.info.fever_start * height_per_second + padding)
+            fever_end_y = height - (self.info.fever_end * height_per_second + padding)
+            draw.line((0, fever_start_y, width, fever_start_y), fill=(0, 200, 150), width=6 * barline_width)
+            draw.line((0, fever_end_y, width, fever_end_y), fill=(0, 200, 150), width=6 * barline_width)
+
+        # Bar lines
         for bar_time in self.bar_lines:
             bar_y = height - (bar_time * height_per_second + padding)
             draw.line((0, bar_y, width, bar_y), fill=(180, 180, 180), width=barline_width)
@@ -244,6 +361,7 @@ class Chart:
         stop_types = {NoteType.StopStart, NoteType.StopEnd}
         long_types = {NoteType.LongStart, NoteType.LongMiddle, NoteType.LongEnd}
 
+        # Slide and hold connectors, and flick indicators
         for note in self.notes:
             if note.next_id is not None and note.next_id > 0:
                 next_note = self.notes[note.next_id]
@@ -255,7 +373,7 @@ class Chart:
 
                 color = tuple(math.floor(c * 0.8) for c in note_colors[note.type])
 
-                if note.type in hold_types:
+                if note.type in hold_types:  # Long and stop connector
                     half_width = math.ceil(hold_width) / 2
                     x1, y1 = note_center(note)
                     x2, y2 = note_center(next_note)
@@ -265,9 +383,10 @@ class Chart:
                         x2 + half_width, y2,
                         x1 + half_width, y1
                     ), fill=color)
-                else:
+                else:  # Slide connector
                     draw.line((note_center(note), note_center(next_note)), fill=color, width=math.ceil(hold_width))
 
+            # Flick triangle
             if note.type == NoteType.Slide:
                 if note.direction != 0:
                     color = tuple(math.floor(c * 0.8) for c in note_colors[note.type])
@@ -277,29 +396,34 @@ class Chart:
                           cx, cy + lane_width * 0.3)
                     draw.polygon(xy, fill=color)
 
+        # Main notes
         for note in self.notes:
             cx, cy = note_center(note)
             color = note_colors[note.type]
-            if note.type in tap_types or note.type in long_types:
+            if note.type in tap_types or note.type in long_types:  # Middle notes
                 xy = (cx - lane_width * 0.6, cy - lane_width * 0.1, cx + lane_width * 0.6, cy + lane_width * 0.1)
                 draw.rectangle(xy, fill=color)
-            elif note.type in scratch_types or note.type in stop_types:
+            elif note.type in scratch_types or note.type in stop_types:  # Disc notes
                 xy = (cx - lane_width * 0.6, cy - lane_width * 0.6, cx + lane_width * 0.6, cy + lane_width * 0.6)
                 draw.ellipse(xy, fill=color)
-            elif note.type == NoteType.Slide:
+            elif note.type == NoteType.Slide:  # Slide
                 xy = (cx - lane_width * 0.2, cy - lane_width * 0.5, cx + lane_width * 0.2, cy + lane_width * 0.5)
                 draw.ellipse(xy, fill=color)
 
+        # Cut out part before chart start
+        if self.info:
+            img = img.crop([0, 0, width, height - self.info.start_time * height_per_second])
+            height = height - self.info.start_time * height_per_second
+
+        # Cut into vertical sections based on max_height and paste them next to each other
         reformat_height = max_height if height >= max_height else height
         reformat_width = width * math.ceil(height / reformat_height)
         reformatted = Image.new('RGB', (reformat_width, reformat_height))
         for i in range(math.ceil(height / reformat_height)):
             region = img.crop((0, height - reformat_height * (i + 1), width, max(0, height - reformat_height * i)))
             reformatted.paste(region, (width * i, 0, width * (i + 1), reformat_height))
+
+        # Downscale
         reformatted = reformatted.resize((int(reformat_width / super_scale), int(reformat_height / super_scale)),
                                          Image.BOX)
         return reformatted
-
-
-def load_chart(f):
-    return Chart.from_msgpack(f.read())
