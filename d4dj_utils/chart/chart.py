@@ -165,7 +165,7 @@ class Chart:
     @classmethod
     def create_mix(cls, songs: List[MusicMaster], diffs: List[ChartDifficulty]):
         try:
-            from d4dj_utils.extended.chart.create_mix import create_mix
+            from d4dj_utils.extended.chart.mix import create_mix
         except ImportError as e:
             raise RuntimeError('Extended features not available.') from e
         return create_mix(songs, diffs)
