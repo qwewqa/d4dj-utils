@@ -101,7 +101,8 @@ def calculate_score(chart: Union[Chart, ChartMaster],
                     enable_fever: bool = True,
                     accuracy: float = 1.0,
                     disable_soflan: bool = False,
-                    autoplay: bool = False) -> Optional[float]:
+                    autoplay: bool = False,
+                    enable_combo_bonus: bool = True) -> Optional[float]:
     if isinstance(chart, ChartMaster):
         chart = chart.load_chart_data()
 
@@ -157,7 +158,9 @@ def calculate_score(chart: Union[Chart, ChartMaster],
     def add_note_callback(note: NoteData):
         def note_cb(_tl):
             multiplier = base_multiplier
-            multiplier *= combo_multipliers[min(timeline.combo, 700)]
+
+            if enable_combo_bonus:
+                multiplier *= combo_multipliers[min(timeline.combo, 700)]
 
             if timeline.fever_active:
                 multiplier *= 2
