@@ -70,12 +70,32 @@ class ResolvedNote:
             self.next = notes[self.original_next_id]
             self.next.prev = self
 
-    def is_in(self, start_time, end_time, source=None):
-        return (start_time <= self.time <= end_time and
-                (self.type == NoteType.Slide or self.next is None or
-                 self.next is source or self.next.is_in(start_time, end_time, self)) and
-                (self.type == NoteType.Slide or self.prev is None or
-                 self.prev is source or self.prev.is_in(start_time, end_time, self)))
+    _single_note_types = {NoteType.Tap1, NoteType.Tap2, NoteType.ScratchLeft, NoteType.ScratchRight}
+
+    def is_in(self, start_time, end_time):
+        if self.type in self._single_note_types:
+            return start_time <= self.time <= end_time
+        elif self.type == NoteType.Slide:
+            if self.direction != 0:
+                return start_time <= self.time <= end_time
+            else:
+                return (start_time <= self.time <= end_time and
+                        ((self.prev and start_time <= self.prev.time <= end_time) or
+                         (self.next and start_time <= self.next.time <= end_time)))
+        else:  # Holds / Stops
+            return self._is_in_forwards(start_time, end_time) and self._is_in_backwards(start_time, end_time)
+
+    def _is_in_forwards(self, start_time, end_time):
+        if self.next:
+            return self.next._is_in_forwards(start_time, end_time)
+        else:
+            return start_time <= self.time <= end_time
+
+    def _is_in_backwards(self, start_time, end_time):
+        if self.prev:
+            return self.prev._is_in_backwards(start_time, end_time)
+        else:
+            return start_time <= self.time <= end_time
 
     def to_data(self, notes):
         try:
