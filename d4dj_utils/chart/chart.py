@@ -4,10 +4,11 @@ import dataclasses
 import math
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Optional, Tuple, List, TYPE_CHECKING, Sequence
 
 import msgpack
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFont
 
 if TYPE_CHECKING:
     from d4dj_utils.master.chart_master import ChartDifficulty, ChartMaster
@@ -267,12 +268,15 @@ class Chart:
         super_scale = 2
         scale = 1
 
-        width = 210
+        # Note that width is cut off at the left at the end,
+        # since this outputs centered charts which are then cropped
+        width = 380
         height_per_second = 150
         padding = 15
         lane_width = 25
         lane_separator_width = 2
         barline_width = 1
+        font_size = 32
 
         vertical_seconds = 10
 
@@ -284,6 +288,7 @@ class Chart:
         lane_separator_width = int(lane_separator_width * scale * super_scale)
         barline_width = int(barline_width * scale * super_scale)
         max_height = int(max_height * scale * super_scale)
+        font_size = int(font_size * scale * super_scale)
 
         if self.info:
             height = int(self.info.end_time * height_per_second + 2 * padding)
@@ -317,8 +322,8 @@ class Chart:
         else:
             draw.line((0, height - padding, width, height - padding), fill=(90, 90, 90), width=barline_width)
 
-        def center_coordinate_at(time: float, lane: int):
-            return lane_width * (lane - 3) + width / 2, height - (time * height_per_second + padding)
+        def center_coordinate_at(t: float, lane: int):
+            return lane_width * (lane - 3) + width / 2, height - (t * height_per_second + padding)
 
         def note_center(note: NoteData):
             return center_coordinate_at(note.time, note.lane)
@@ -430,18 +435,40 @@ class Chart:
                 xy = (cx - lane_width * 0.2, cy - lane_width * 0.5, cx + lane_width * 0.2, cy + lane_width * 0.5)
                 draw.ellipse(xy, fill=color)
 
+        # Combo and bar numbers
+        font = ImageFont.truetype(str(Path(__file__).parent / 'RobotoMono-SemiBold.ttf'), font_size)
+        combo_count = 0
+        bar_count = 0
+        numbers_image = Image.new('RGBA', img.size, (255, 255, 255, 0))
+        numbers_draw = ImageDraw.Draw(numbers_image)
+        for time, is_bar in sorted([(note.time, False) for note in self.notes] +
+                                   [(bar, True) for bar in self.bar_lines]):
+            if not is_bar:
+                combo_count += 1
+            else:
+                bar_count += 1
+                text_y = height - (time * height_per_second + padding) + 6
+                numbers_draw.text((3.8 * lane_width + width / 2 + 4, text_y), str(combo_count),
+                                  font=font, fill=(255, 255, 127), anchor='lt')
+                numbers_draw.text((3.8 * lane_width + width / 2 + 4, text_y + font_size + 6), str(bar_count),
+                                  font=font, fill=(255, 200, 200), anchor='lt')
+        img.alpha_composite(numbers_image)
+
         # Cut out part before chart start
         if self.info:
             img = img.crop([0, 0, width, height - self.info.start_time * height_per_second])
             height = height - self.info.start_time * height_per_second
 
         # Cut into vertical sections based on max_height and paste them next to each other
+        left_cut = math.ceil(width / 2 - lane_width * 3.8)
+        right_pad = 30
+        padded_width = width - left_cut + right_pad
         reformat_height = max_height if height >= max_height else height
-        reformat_width = width * math.ceil(height / reformat_height)
+        reformat_width = padded_width * math.ceil(height / reformat_height)
         reformatted = Image.new('RGB', (reformat_width, reformat_height))
         for i in range(math.ceil(height / reformat_height)):
-            region = img.crop((0, height - reformat_height * (i + 1), width, max(0, height - reformat_height * i)))
-            reformatted.paste(region, (width * i, 0, width * (i + 1), reformat_height))
+            region = img.crop((left_cut, height - reformat_height * (i + 1), width, max(0, height - reformat_height * i)))
+            reformatted.paste(region, (padded_width * i, 0, padded_width * (i + 1) - right_pad, reformat_height))
 
         # Downscale
         reformatted = reformatted.resize((int(reformat_width / super_scale), int(reformat_height / super_scale)),
