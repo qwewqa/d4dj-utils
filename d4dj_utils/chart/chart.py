@@ -272,12 +272,12 @@ class Chart:
         # since this outputs centered charts which are then cropped
         width = 380
         height_per_second = 150
-        padding = 15
+        padding = 50
         lane_width = 25
         lane_separator_width = 2
         barline_width = 1
         font_size = 32
-
+        trim_left = True
         vertical_seconds = 10
 
         max_height = height_per_second * vertical_seconds
@@ -441,16 +441,31 @@ class Chart:
         bar_count = 0
         numbers_image = Image.new('RGBA', img.size, (255, 255, 255, 0))
         numbers_draw = ImageDraw.Draw(numbers_image)
+        start_time = 0
+        if self.info:
+            start_time = self.info.start_time
         for time, is_bar in sorted([(note.time, False) for note in self.notes] +
                                    [(bar, True) for bar in self.bar_lines]):
             if not is_bar:
                 combo_count += 1
             else:
                 bar_count += 1
-                text_y = height - (time * height_per_second + padding) + 6
-                numbers_draw.text((3.8 * lane_width + width / 2 + 4, text_y), str(combo_count),
-                                  font=font, fill=(255, 255, 127), anchor='lt')
-                numbers_draw.text((3.8 * lane_width + width / 2 + 4, text_y + font_size + 6), str(bar_count),
+                text_y = height - (time * height_per_second + padding)
+                text_padding = font_size / 8
+                combo_anchor_y = text_y - text_padding
+                bar_anchor_y = text_y + text_padding
+
+                # Prevent cut off text at the top/bottom
+                combo_anchor_dist = -(height - combo_anchor_y - start_time * height_per_second) % max_height
+                bar_anchor_dist = (height - bar_anchor_y - start_time * height_per_second) % max_height
+                if combo_anchor_dist < font_size:
+                    combo_anchor_y -= combo_anchor_dist + text_padding
+                if bar_anchor_dist < font_size:
+                    bar_anchor_y += bar_anchor_dist + text_padding
+
+                numbers_draw.text((3.8 * lane_width + width / 2 + 4, combo_anchor_y), str(combo_count),
+                                  font=font, fill=(255, 255, 127), anchor='lb')
+                numbers_draw.text((3.8 * lane_width + width / 2 + 4, bar_anchor_y), str(bar_count),
                                   font=font, fill=(255, 200, 200), anchor='lt')
         img.alpha_composite(numbers_image)
 
@@ -460,8 +475,12 @@ class Chart:
             height = height - self.info.start_time * height_per_second
 
         # Cut into vertical sections based on max_height and paste them next to each other
-        left_cut = math.ceil(width / 2 - lane_width * 3.8)
-        right_pad = 30
+        if trim_left:
+            left_cut = math.ceil(width / 2 - lane_width * 3.8)
+            right_pad = 30
+        else:
+            left_cut = 0
+            right_pad = 0
         padded_width = width - left_cut + right_pad
         reformat_height = max_height if height >= max_height else height
         reformat_width = padded_width * math.ceil(height / reformat_height)
