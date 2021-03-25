@@ -43,6 +43,9 @@ class AssetManager:
         self.condition_master: ma.MasterDict[int, ConditionMaster] = self._load_master(ConditionMaster)
         from d4dj_utils.master.event_master import EventMaster
         self.event_master: ma.MasterDict[int, EventMaster] = self._load_master(EventMaster)
+        from d4dj_utils.master.event_medley_setlist_master import EventMedleySetlistMaster
+        self.event_medley_setlist_master: ma.MasterDict[int, EventMedleySetlistMaster] = self._load_master(
+            EventMedleySetlistMaster)
         from d4dj_utils.master.event_specific_bonus_master import EventSpecificBonusMaster
         self.event_specific_bonus_master: ma.MasterDict[int, EventSpecificBonusMaster] = self._load_master(
             EventSpecificBonusMaster)
@@ -126,7 +129,7 @@ class AssetManager:
                     msgpack.Timestamp: 'datetime'
                 }
                 cur.execute(f'CREATE TABLE {name}'
-                                f'({", ".join(f"{field.name} {type_mapping[field.type]}" for field in fields)})')
+                            f'({", ".join(f"{field.name} {type_mapping[field.type]}" for field in fields)})')
                 insert_query = f'INSERT INTO {name} VALUES ({f", ".join(["?"] * len(cls.db_fields))})'
                 for value in master_dict.values():
                     field_dict = dataclasses.asdict(value)
