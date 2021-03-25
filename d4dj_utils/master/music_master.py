@@ -39,7 +39,7 @@ class MusicMaster(MasterAsset):
     is_hidden: bool
     exclude_challenge: bool
     is_tutorial: bool
-    unknown_1: bool
+    can_fair_use: bool
 
     @property
     def category(self) -> 'MusicCategory':
@@ -123,7 +123,7 @@ class MusicMaster(MasterAsset):
             'exclude_challenge': self.exclude_challenge,
             'is_tutorial': self.is_tutorial,
             'mix_info': '(' + ', '.join(f'{k.name}: {v}' for k, v in self.mix_info.items()) + ')',
-            'unknown_1': self.unknown_1
+            'can_fair_use': self.can_fair_use
         }
 
 
