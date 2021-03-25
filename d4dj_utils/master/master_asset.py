@@ -50,11 +50,18 @@ class MasterAsset(abc.ABC):
     def extended_description(self) -> str:
         def gen_lines():
             for key, desc in self.extended_description_items.items():
-                desc = str(desc)
-                if '\n' in desc:
-                    yield f'{key}:\n{textwrap.indent(desc, "   |")}'
+                if isinstance(desc, (tuple, list)):
+                    if len(desc) > 2:
+                        join_str = ",\n"
+                        yield f'{key}: [\n{textwrap.indent(join_str.join(str(item) for item in desc), "    ")}\n]'
+                    else:
+                        yield f'{key}: [{", ".join(str(item) for item in desc)}]'
                 else:
-                    yield f'{key}: {desc}'
+                    desc = str(desc)
+                    if '\n' in desc:
+                        yield f'{key}:\n{textwrap.indent(desc, "   |")}'
+                    else:
+                        yield f'{key}: {desc}'
 
         return '\n'.join(gen_lines())
 

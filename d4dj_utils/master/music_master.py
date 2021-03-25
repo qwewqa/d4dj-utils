@@ -93,6 +93,7 @@ class MusicMaster(MasterAsset):
         return {
             'category': self.category.name,
             'unit': self.unit,
+            'chart_levels': self.chart_levels,
         }
 
     @property
@@ -110,7 +111,7 @@ class MusicMaster(MasterAsset):
             'special_unit_name': self.special_unit_name,
             'category': self.category.name,
             'unit': self.unit,
-            'chart_levels': '[' + ', '.join(str(c) for c in self.chart_levels) + ']',
+            'chart_levels': self.chart_levels,
             'default_order': self.default_order,
             'bpm': self.bpm,
             'open_key': self.open_key,
