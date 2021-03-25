@@ -1,5 +1,7 @@
+import dataclasses
 import inspect
 import logging
+import sqlite3
 import textwrap
 from collections import defaultdict
 from pathlib import Path
@@ -17,6 +19,7 @@ class AssetManager:
         self.logger = logging.getLogger(__name__)
         self.path = Path(path)
         self.masters: Dict[str, ma.MasterDict] = {}
+        self.db = sqlite3.connect(':memory:')  # So sql queries can be executed on some properties
         from d4dj_utils.master.achievement_master import AchievementMaster
         self.achievement_master: ma.MasterDict[int, AchievementMaster] = self._load_master(AchievementMaster)
         from d4dj_utils.master.attribute_master import AttributeMaster
@@ -85,10 +88,6 @@ class AssetManager:
         for path in sorted(master_paths.difference(loaded_master_paths)):
             self.logger.debug(f'Unknown master file not loaded "{path}".')
 
-        self.gacha_table_master_tables = defaultdict(lambda: [])
-        for gtm in self.gacha_table_master.values():
-            self.gacha_table_master_tables[gtm.table_id].append(gtm)
-
     def __getitem__(self, item):
         return self.masters.__getitem__(item)
 
@@ -99,7 +98,7 @@ class AssetManager:
     def get_master_paths(self):
         return (self.path / 'Master').glob('*Master.msgpack')
 
-    def _load_master(self, cls: Type) -> ma.MasterDict:
+    def _load_master(self, cls: Type[ma.MasterAsset]) -> ma.MasterDict:
         name = cls.__name__
         # -1 for self, and -1 for the asset_manager argument.
         # What remains is the number of arguments to keep from the msgpack file itself.
@@ -115,6 +114,24 @@ class AssetManager:
         else:
             master_dict = ma.MasterDict({k: cls(self, *v) for k, v in data.items()}, name, asset_path)
         self.masters[name] = master_dict
+        if cls.db_fields:
+            with self.db:
+                cur = self.db.cursor()
+                fields = [cls.__dataclass_fields__[db_field] for db_field in cls.db_fields]
+                type_mapping = {
+                    bool: 'integer',
+                    int: 'integer',
+                    float: 'real',
+                    str: 'text',
+                    msgpack.Timestamp: 'datetime'
+                }
+                cur.execute(f'CREATE TABLE {name}'
+                                f'({", ".join(f"{field.name} {type_mapping[field.type]}" for field in fields)})')
+                insert_query = f'INSERT INTO {name} VALUES ({f", ".join(["?"] * len(cls.db_fields))})'
+                for value in master_dict.values():
+                    field_dict = dataclasses.asdict(value)
+                    field_values = [field_dict[name] for name in cls.db_fields]
+                    cur.execute(insert_query, field_values)
         return master_dict
 
     def formatted_masters(self):

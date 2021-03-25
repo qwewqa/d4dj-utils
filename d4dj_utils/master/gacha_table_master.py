@@ -11,6 +11,8 @@ class GachaTableMaster(MasterAsset):
     card_id: int
     rate: int
 
+    db_fields = ['id', 'table_id']
+
     @property
     def card(self):
         return self.assets.card_master.get(self.card_id)

@@ -22,6 +22,7 @@ VT = TypeVar('VT')
 @dataclasses.dataclass
 class MasterAsset(abc.ABC):
     asset_manager: 'dataclasses.InitVar[am.AssetManager]'
+    db_fields = {}
 
     def __post_init__(self, asset_manager):
         self.assets = asset_manager

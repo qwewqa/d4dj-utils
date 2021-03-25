@@ -14,6 +14,8 @@ class GachaDrawMaster(MasterAsset):
     draw_limit: int
     is_reset_limit_every_day: bool
 
+    db_fields = ['id', 'gacha_id']
+
     @property
     def gacha(self):
         return self.assets.gacha_master.get(self.gacha_id)

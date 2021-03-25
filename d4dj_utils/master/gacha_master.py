@@ -39,7 +39,10 @@ class GachaMaster(MasterAsset):
 
     @property
     def tables(self):
-        return [self.assets.gacha_table_master_tables.get(tid) for tid in self.table_ids]
+        cur = self.assets.db.cursor()
+        return [[self.assets.gacha_table_master[gtmid[0]]
+                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
+                for tid in self.table_ids]
 
     @property
     def pick_up_cards(self):
@@ -51,7 +54,10 @@ class GachaMaster(MasterAsset):
 
     @property
     def bonus_tables(self):
-        return [self.assets.gacha_table_master_tables.get(tid) for tid in self.bonus_table_ids]
+        cur = self.assets.db.cursor()
+        return [[self.assets.gacha_table_master[gtmid[0]]
+                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
+                for tid in self.bonus_table_ids]
 
     @property
     def gacha_type(self):
@@ -61,9 +67,11 @@ class GachaMaster(MasterAsset):
     def bonus_stock(self):
         return self.assets.stock_master.get(self.bonus_stock_id)
 
-    @cached_property
+    @property
     def draw_data(self):
-        return tuple(draw for draw in self.assets.gacha_draw_master.values() if draw.gacha == self)
+        cur = self.assets.db.cursor()
+        return [self.assets.gacha_draw_master[gdmid[0]]
+                for gdmid in cur.execute('SELECT id FROM GachaDrawMaster WHERE gacha_id=?', [self.id])]
 
     @property
     def event(self):
@@ -101,5 +109,6 @@ class GachaMaster(MasterAsset):
             'is_tutorial': self.is_tutorial,
             'ascending_sort_id': self.ascending_sort_id,
             'gacha_type': self.gacha_type,
-            'bonus_stock': self.bonus_stock
+            'bonus_stock': self.bonus_stock,
+            'draw_data': self.draw_data,
         }
