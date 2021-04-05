@@ -93,7 +93,7 @@ class CardMaster(MasterAsset):
                 return CardAvailability.Collab
             else:
                 return CardAvailability.Permanent
-        elif self == self.event.display_card:
+        elif self.event:
             return CardAvailability.Welfare
         return CardAvailability.Unknown
 

@@ -59,7 +59,7 @@ class EventMaster(MasterAsset):
 
     @property
     def display_card(self):
-        return self.assets.card_master[self.display_card_id]
+        return self.assets.card_master.get(self.display_card_id)
 
     @property
     def display_card_type(self):
