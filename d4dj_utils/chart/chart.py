@@ -162,11 +162,12 @@ class ChartCommonData:
 class ChartInfo:
     start_time: float
     end_time: float
-    skill_times: List[float]
+    skill_times: Sequence[float]
     fever_start: float
     fever_end: float
     level: float
-    medley_transition_times: List[float]
+    medley_transition_times: Sequence[float]
+    base_skill_times: Sequence[float]
 
 
 @dataclass
