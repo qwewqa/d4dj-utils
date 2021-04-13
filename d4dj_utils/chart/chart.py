@@ -166,6 +166,7 @@ class ChartInfo:
     fever_start: float
     fever_end: float
     level: float
+    medley_transition_times: List[float]
 
 
 @dataclass
@@ -329,6 +330,12 @@ class Chart:
             return center_coordinate_at(note.time, note.lane)
 
         if self.info:
+            # Groovy start/end lines
+            fever_start_y = height - (self.info.fever_start * height_per_second + padding)
+            fever_end_y = height - (self.info.fever_end * height_per_second + padding)
+            draw.line((0, fever_start_y, width, fever_start_y), fill=(0, 200, 150), width=9 * barline_width)
+            draw.line((0, fever_end_y, width, fever_end_y), fill=(0, 200, 150), width=9 * barline_width)
+
             skill_bars = self.info.skill_times
             skill_image = Image.new('RGBA', img.size, (255, 255, 255, 0))
             draw_skill = ImageDraw.Draw(skill_image)
@@ -356,11 +363,11 @@ class Chart:
                 draw_skill.line((0, end_bar_y, width, end_bar_y), fill=(26, 133, 255), width=6 * barline_width)
             img.alpha_composite(skill_image)
 
-            # Groovy start/end lines
-            fever_start_y = height - (self.info.fever_start * height_per_second + padding)
-            fever_end_y = height - (self.info.fever_end * height_per_second + padding)
-            draw.line((0, fever_start_y, width, fever_start_y), fill=(0, 200, 150), width=6 * barline_width)
-            draw.line((0, fever_end_y, width, fever_end_y), fill=(0, 200, 150), width=6 * barline_width)
+            # Medley transition lines
+            for transition_time in self.info.medley_transition_times:
+                transition_y = height - (transition_time * height_per_second + padding)
+                draw.line((0, transition_y, width, transition_y), fill=(160, 40, 180), width=3 * barline_width)
+
 
         # Bar lines
         for bar_time in self.bar_lines:
