@@ -16,6 +16,9 @@ class RewardMaster(MasterAsset):
     def reward_category(self) -> 'RewardCategory':
         return RewardCategory(self.reward_category_id)
 
+    def get_friendly_description(self):
+        return self.reward_category.get_friendly_name(self.reward_id, self.assets)
+
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {'reward': self.reward_category.get_name(self.reward_id, self.assets), 'amount': self.amount}

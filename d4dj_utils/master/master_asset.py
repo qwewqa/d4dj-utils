@@ -45,7 +45,12 @@ class MasterAsset(abc.ABC):
         raise NotImplementedError
 
     def one_line_description(self):
-        return ', '.join(f'{k}: {str(v)}' for k, v in self.one_line_description_items.items())
+        def format_desc(desc):
+            if isinstance(desc, (tuple, list)):
+                return '[' + ', '.join(str(v) for v in desc) + ']'
+            else:
+                return str(desc)
+        return ', '.join(f'{k}: {format_desc(v)}' for k, v in self.one_line_description_items.items())
 
     def extended_description(self) -> str:
         def gen_lines():

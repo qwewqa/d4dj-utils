@@ -62,6 +62,25 @@ class RewardCategory(int, Enum):
             return f'{self.name} - {value}'
         return f'{self.name} #{reward_id}'
 
+    def get_friendly_name(self, reward_id: int, manager: AssetManager):
+        if self == self.Stock:
+            return manager.stock_master[reward_id].name
+        elif self == self.Card:
+            card = manager.card_master[reward_id]
+            return f'{card.rarity_id}★ {card.name} {card.character.full_name_english}'
+        elif self == self.ClubItem:
+            return 'Club Item'
+        elif self == self.Music:
+            return manager.music_master[reward_id].name
+        elif self == self.Stamp:
+            return manager.stamp_master[reward_id].name
+        elif self == self.Honor:
+            return 'Honor'
+        elif self == self.Episode:
+            return 'Episode'
+        elif self == self.Movies:
+            return 'Movie'
+
 
 class GachaType(Enum):
     Nothing = 0
