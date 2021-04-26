@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Sequence
 
 import msgpack
 
@@ -12,19 +12,19 @@ from d4dj_utils.master.master_asset import MasterAsset
 class GachaMaster(MasterAsset):
     id: int
     name: str
-    table_rate_ids: Tuple[int]
-    table_ids: Tuple[int]
-    pick_up_card_ids: Tuple[int]
+    table_rate_ids: Sequence[int]
+    table_ids: Sequence[int]
+    pick_up_card_ids: Sequence[int]
     summary: str
     has_specific_bg: bool
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
     note: str
     detail: str
-    live_2d_bg: Tuple[str]
+    live_2d_bg: Sequence[str]
     bonus_max_value: int
     bonus_table_rate_id: int
-    bonus_table_ids: Tuple[int]
+    bonus_table_ids: Sequence[int]
     login_trigger_minutes: int
     show_home_animation: bool
     has_pick_up_duplicate_bonus: bool
@@ -32,6 +32,9 @@ class GachaMaster(MasterAsset):
     ascending_sort_id: int
     gacha_type_id: int
     bonus_stock_id: int
+    bonus_selectable_cards_max_value: int
+    bonus_selectable_card_ids: Sequence[int]
+    unknown1: Sequence[int]
 
     @property
     def table_rates(self):
@@ -66,6 +69,10 @@ class GachaMaster(MasterAsset):
     @property
     def bonus_stock(self):
         return self.assets.stock_master.get(self.bonus_stock_id)
+
+    @property
+    def bonus_selectable_cards(self):
+        return [self.assets.card_master[cid] for cid in self.bonus_selectable_card_ids]
 
     @property
     def draw_data(self):
@@ -110,5 +117,8 @@ class GachaMaster(MasterAsset):
             'ascending_sort_id': self.ascending_sort_id,
             'gacha_type': self.gacha_type,
             'bonus_stock': self.bonus_stock,
+            'bonus_selectable_cards_max_value': self.bonus_selectable_cards_max_value,
+            'bonus_selectable_cards': self.bonus_selectable_cards,
+            'unknown1': self.unknown1,
             'draw_data': self.draw_data,
         }
