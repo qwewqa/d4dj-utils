@@ -131,7 +131,7 @@ class CardMaster(MasterAsset):
         }
 
 
-class CardAvailability(enum.Enum):
+class CardAvailability(enum.IntEnum):
     Unknown = enum.auto()
     Permanent = enum.auto()
     Limited = enum.auto()
