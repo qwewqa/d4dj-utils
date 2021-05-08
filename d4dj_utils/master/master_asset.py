@@ -15,9 +15,6 @@ try:
 except (ImportError, ModuleNotFoundError):
     tools = None
 
-KT = TypeVar('KT')
-VT = TypeVar('VT')
-
 
 @dataclasses.dataclass
 class MasterAsset(abc.ABC):
@@ -50,6 +47,7 @@ class MasterAsset(abc.ABC):
                 return '[' + ', '.join(str(v) for v in desc) + ']'
             else:
                 return str(desc)
+
         return ', '.join(f'{k}: {format_desc(v)}' for k, v in self.one_line_description_items.items())
 
     def extended_description(self) -> str:
@@ -107,6 +105,10 @@ class MasterAsset(abc.ABC):
 
     def as_tuple(self):
         return dataclasses.astuple(self)
+
+
+KT = TypeVar('KT')
+VT = TypeVar('VT', bound=MasterAsset)
 
 
 class MasterDict(dict, MutableMapping[KT, VT]):
