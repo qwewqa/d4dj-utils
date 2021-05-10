@@ -30,8 +30,8 @@ class EventMaster(MasterAsset):
     exchange_shop_id: int
     is_d4_fes_story: bool
     top_prefab_path: str
-    unknown1: bool
-    unknown2: str
+    show_mission_button: bool
+    bgm_path: str
 
     @property
     def event_type(self):
@@ -134,8 +134,8 @@ class EventMaster(MasterAsset):
             'exchange_shop': self.exchange_shop,
             'is_d4_fes_story': self.is_d4_fes_story,
             'top_prefab_path': self.top_prefab_path,
-            'unknown1': self.unknown1,
-            'unknown2': self.unknown2,
+            'show_mission_button': self.show_mission_button,
+            'bgm_path': self.bgm_path,
         }
 
 
