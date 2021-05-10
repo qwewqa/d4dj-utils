@@ -172,27 +172,18 @@ def calculate_score(chart: Union[Chart, ChartMaster],
                 else:
                     timeline.score += math.floor(multiplier * base_score)
             else:
-                if note.type in accuracy_applicable_note_types:
-                    if timeline.active_skill_index != -1:
-                        skill = skills[timeline.active_skill_index]
-                        timeline.score += (accuracy *
-                                           math.floor(base_score * multiplier *
-                                                      (1 + skill.perfect_score_up_rate / 100 +
-                                                       skill.score_up_rate / 100)))
-                        timeline.score += (0.9 * (1 - accuracy) *
-                                           math.floor(base_score * multiplier *
-                                                      (1 + skill.score_up_rate / 100)))
-                    else:
-                        timeline.score += accuracy * math.floor(base_score * multiplier)
-                        timeline.score += 0.9 * (1 - accuracy) * math.floor(base_score * multiplier)
+                if timeline.active_skill_index != -1:
+                    skill = skills[timeline.active_skill_index]
+                    timeline.score += (accuracy *
+                                       math.floor(base_score * multiplier *
+                                                  (1 + skill.perfect_score_up_rate / 100 +
+                                                   skill.score_up_rate / 100)))
+                    timeline.score += (0.9 * (1 - accuracy) *
+                                       math.floor(base_score * multiplier *
+                                                  (1 + skill.score_up_rate / 100)))
                 else:
-                    if timeline.active_skill_index != -1:
-                        skill = skills[timeline.active_skill_index]
-                        timeline.score += (math.floor(base_score * multiplier *
-                                                      (1 + skill.perfect_score_up_rate / 100 +
-                                                       skill.score_up_rate / 100)))
-                    else:
-                        timeline.score += math.floor(base_score * multiplier)
+                    timeline.score += accuracy * math.floor(base_score * multiplier)
+                    timeline.score += 0.9 * (1 - accuracy) * math.floor(base_score * multiplier)
             if not autoplay:
                 timeline.combo += 1
 
