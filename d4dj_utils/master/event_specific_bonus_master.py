@@ -44,7 +44,7 @@ class EventSpecificBonusMaster(MasterAsset):
 
     @property
     def event_point_parameter_bonus(self) -> 'ParameterBonus':
-        return ParameterBonus(self.event_point_parameter_bonus_id)
+        return ParameterBonus(self.event_point_parameter_bonus_id + 1)
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
