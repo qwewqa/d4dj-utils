@@ -71,7 +71,7 @@ class CardMaster(MasterAsset):
     def gacha(self) -> Optional[GachaMaster]:
         return next((gacha for gacha in self.assets.gacha_master.values()
                      if self in gacha.pick_up_cards and
-                     '1人★4確定' not in gacha.name), None)
+                     '★4' not in gacha.name), None)
 
     @cached_property
     def event(self) -> Optional[EventMaster]:
@@ -87,10 +87,10 @@ class CardMaster(MasterAsset):
         if gacha := self.gacha:
             if gacha.gacha_type == GachaType.Birthday:
                 return CardAvailability.Birthday
-            elif '期間限定' in gacha.summary:
-                return CardAvailability.Limited
-            elif 'コラボ限定' in gacha.summary:
+            elif any(n in gacha.summary for n in ['コラボ限定', 'collaboration only']):
                 return CardAvailability.Collab
+            elif any(n in gacha.summary for n in ['期間限定', 'limited time']):
+                return CardAvailability.Limited
             else:
                 return CardAvailability.Permanent
         elif self.event:

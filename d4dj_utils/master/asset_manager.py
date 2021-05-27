@@ -3,7 +3,6 @@ import inspect
 import logging
 import sqlite3
 import textwrap
-from collections import defaultdict
 from pathlib import Path
 from typing import Type, Dict, Tuple
 
