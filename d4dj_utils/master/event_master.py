@@ -39,15 +39,15 @@ class EventMaster(MasterAsset):
 
     @property
     def reception_close_datetime(self):
-        return self.timestamp_to_jst(self.reception_close_date)
+        return self.convert_timestamp(self.reception_close_date)
 
     @property
     def rank_fix_start_datetime(self):
-        return self.timestamp_to_jst(self.rank_fix_start_date)
+        return self.convert_timestamp(self.rank_fix_start_date)
 
     @property
     def result_announcement_datetime(self):
-        return self.timestamp_to_jst(self.result_announcement_date)
+        return self.convert_timestamp(self.result_announcement_date)
 
     @property
     def stock(self):
@@ -67,7 +67,7 @@ class EventMaster(MasterAsset):
 
     @property
     def story_unlock_datetime(self):
-        return self.timestamp_to_jst(self.story_unlock_date)
+        return self.convert_timestamp(self.story_unlock_date)
 
     @property
     def images_path(self):

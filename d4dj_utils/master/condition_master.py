@@ -37,3 +37,5 @@ class ConditionCategory(Enum):
     ClubItem = 3
     Story = 4
     EventPoint = 5
+    CharacterRank = 6
+    Unreleased = 99

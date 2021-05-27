@@ -8,13 +8,15 @@ from pathlib import Path
 from typing import Type, Dict, Tuple
 
 import msgpack
+import pytz
 
 import d4dj_utils.master.master_asset as ma
 from d4dj_utils.chart.chart import Chart
 
 
 class AssetManager:
-    def __init__(self, path, drop_extra_fields: bool = False):
+    def __init__(self, path, *, timezone=None, drop_extra_fields: bool = False):
+        self.timezone = timezone or pytz.timezone('Asia/Tokyo')
         self.drop_extra_fields = drop_extra_fields
         self.logger = logging.getLogger(__name__)
         self.path = Path(path)
@@ -185,3 +187,6 @@ class AssetManager:
                     chart = Chart.from_msgpack(f.read(), None)
                 chart.render().save(out_path)
                 self.logger.info(f'Chart rendered at "{path}".')
+
+    def __repr__(self):
+        return f'AssetManager(path = {repr(self.path)}, timezone = {repr(self.timezone)})'

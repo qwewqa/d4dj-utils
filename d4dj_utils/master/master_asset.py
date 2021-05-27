@@ -87,20 +87,19 @@ class MasterAsset(abc.ABC):
         return self.start_datetime is None or self.start_datetime < datetime.datetime.now(
             datetime.timezone.utc) < self.end_datetime
 
-    @staticmethod
-    def timestamp_to_jst(timestamp: msgpack.Timestamp):
-        return pytz.timezone('Asia/Tokyo').localize(timestamp.to_datetime().replace(tzinfo=None))
+    def convert_timestamp(self, timestamp: msgpack.Timestamp):
+        return self.assets.timezone.localize(timestamp.to_datetime().replace(tzinfo=None))
 
     @property
     def start_datetime(self) -> Optional[datetime.datetime]:
         if hasattr(self, 'start_date') and isinstance(self.start_date, msgpack.Timestamp):
-            return self.timestamp_to_jst(self.start_date)
+            return self.convert_timestamp(self.start_date)
         return None
 
     @property
     def end_datetime(self) -> Optional[datetime.datetime]:
         if hasattr(self, 'end_date') and isinstance(self.end_date, msgpack.Timestamp):
-            return self.timestamp_to_jst(self.end_date)
+            return self.convert_timestamp(self.end_date)
         return None
 
     def as_tuple(self):

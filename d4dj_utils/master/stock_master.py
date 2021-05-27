@@ -90,4 +90,5 @@ class StockCategory(Enum):
     Event = 8
     GachaTicket = 9
     Random = 10
-    Point = 99
+    ParameterLevelUp = 11
+    Other = 99

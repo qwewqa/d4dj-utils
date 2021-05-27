@@ -19,6 +19,8 @@ class EventSpecificBonusMaster(MasterAsset):
     attribute_match_parameter_bonus_value: int
     all_match_parameter_bonus_id: int
     all_match_parameter_bonus_value: int
+    event_point_parameter_bonus_id: int = 0
+    event_point_parameter_bonus_rate: int = 0
 
     @property
     def characters(self):
@@ -41,6 +43,10 @@ class EventSpecificBonusMaster(MasterAsset):
         return ParameterBonus(self.all_match_parameter_bonus_id)
 
     @property
+    def event_point_parameter_bonus(self) -> 'ParameterBonus':
+        return ParameterBonus(self.event_point_parameter_bonus_id)
+
+    @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
             'characters': '[' + ' ,'.join(str(c) for c in self.characters) + ']',
@@ -61,6 +67,8 @@ class EventSpecificBonusMaster(MasterAsset):
             'attribute_match_parameter_bonus_value': self.attribute_match_parameter_bonus_value,
             'all_match_parameter_bonus': self.all_match_parameter_bonus.name,
             'all_match_parameter_bonus_value': self.all_match_parameter_bonus_value,
+            'event_point_parameter_bonus': self.event_point_parameter_bonus.name,
+            'event_point_parameter_bonus_rate': self.event_point_parameter_bonus_rate,
         }
 
 
