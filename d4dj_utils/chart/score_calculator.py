@@ -152,8 +152,9 @@ def calculate_score(chart: Union[Chart, ChartMaster],
         
         if n_fever_notes := sum(1 for n in chart.notes if chart.info.fever_start <= n.time <= chart.info.fever_end):
             fever_note_fraction = n_fever_notes / len(chart.notes)
-            timeline.fever_multiplier = (0.28 / fever_note_fraction) ** 0.6
-            timeline.fever_multiplier = max(1.1, min(2 * fever_multiplier, 5.0))
+            fever_multiplier = (0.28 / fever_note_fraction) ** 0.6
+            fever_multiplier = max(1.1, min(2 * fever_multiplier, 5.0))
+            timeline.fever_multiplier = fever_multiplier
 
     base_multiplier = 1
     if disable_soflan:
