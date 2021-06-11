@@ -121,6 +121,7 @@ def calculate_score(chart: Union[Chart, ChartMaster],
     timeline.score = 0
     timeline.combo = 0
     timeline.fever_active = False
+    timeline.fever_multiplier = 1.0
 
     base_score = (1 + 0.01 * (chart.info.level - 5)) * power * 3 / len(chart.notes)
 
@@ -148,6 +149,11 @@ def calculate_score(chart: Union[Chart, ChartMaster],
 
         timeline.add(chart.info.fever_start, enable_fever_cb)
         timeline.add(chart.info.fever_end, disable_fever_cb)
+        
+        if n_fever_notes := sum(1 for n in chart.notes if chart.info.fever_start <= n.time <= chart.info.fever_end):
+            fever_note_fraction = n_fever_notes / len(chart.notes)
+            timeline.fever_multiplier = (0.28 / fever_note_fraction) ** 0.6
+            timeline.fever_multiplier = max(1.1, min(2 * fever_multiplier, 5.0))
 
     base_multiplier = 1
     if disable_soflan:
@@ -163,7 +169,7 @@ def calculate_score(chart: Union[Chart, ChartMaster],
                 multiplier *= combo_multipliers[min(timeline.combo, 700)]
 
             if timeline.fever_active:
-                multiplier *= 2
+                multiplier *= timeline.fever_multiplier
 
             if autoplay:
                 if timeline.active_skill_index != -1:
