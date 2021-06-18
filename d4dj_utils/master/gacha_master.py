@@ -35,7 +35,9 @@ class GachaMaster(MasterAsset):
     bonus_stock_id: int
     bonus_selectable_cards_max_value: int = 0
     bonus_selectable_card_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
-    select_bonus_rewards_id: Sequence[int] = dataclasses.field(default_factory=lambda: [])
+    select_bonus_reward_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
+    pick_up_duplicate_bonus_stock_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
+    pick_up_duplicate_bonus_stock_amounts: Sequence[int] = dataclasses.field(default_factory=lambda: [])
 
     @property
     def table_rates(self):
@@ -74,6 +76,10 @@ class GachaMaster(MasterAsset):
     @property
     def bonus_selectable_cards(self):
         return [self.assets.card_master[cid] for cid in self.bonus_selectable_card_ids]
+
+    @property
+    def pick_up_duplicate_bonus_stock(self):
+        return [self.assets.stock_master[sid] for sid in self.pick_up_duplicate_bonus_stock_ids]
 
     @property
     def draw_data(self):
@@ -120,6 +126,8 @@ class GachaMaster(MasterAsset):
             'bonus_stock': self.bonus_stock,
             'bonus_selectable_cards_max_value': self.bonus_selectable_cards_max_value,
             'bonus_selectable_cards': self.bonus_selectable_cards,
-            'select_bonus_rewards_id': self.select_bonus_rewards_id,
+            'select_bonus_reward_ids': self.select_bonus_reward_ids,
+            'pick_up_duplicate_bonus_stock': self.pick_up_duplicate_bonus_stock,
+            'pick_up_duplicate_bonus_stock_amounts': self.pick_up_duplicate_bonus_stock_amounts,
             'draw_data': self.draw_data,
         }
