@@ -120,14 +120,14 @@ class ChartScoringData:
         if autoplay:
             enable_combo_bonus = False
         data = self.data[ScoringDataType(fever=enable_fever, combo=enable_combo_bonus)]
-        multiplier = 1.0
+        multiplier = power
         if disable_soflan:
             multiplier *= disable_soflan_multiplier
         if autoplay:
             multiplier *= autoplay_multiplier
         total_score = 0
         for entry, count in data.items():
-            score = entry.score * power
+            score = entry.score * multiplier
             if entry.skill != -1:
                 skill = skills[entry.skill]
                 if autoplay:
