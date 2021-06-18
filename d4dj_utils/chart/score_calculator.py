@@ -136,6 +136,8 @@ class ChartScoringData:
                     score = (accuracy * math.floor(score * (1 + skill.score_up_rate / 100 +
                                                             skill.perfect_score_up_rate / 100)) +
                              (1 - accuracy) * math.floor(0.9 * score * (1 + skill.score_up_rate / 100)))
+            else:
+                score = accuracy * math.floor(score) + (1 - accuracy) * math.floor(0.9 * score)
             total_score += score * count
         return total_score
 
