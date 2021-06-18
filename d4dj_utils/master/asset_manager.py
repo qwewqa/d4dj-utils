@@ -116,7 +116,7 @@ class AssetManager:
         with asset_path.open('rb') as f:
             data = msgpack.load(f, strict_map_key=False, use_list=False)
         if self.drop_extra_fields:
-            if len(next(iter(data.values()))) != argument_count:
+            if len(next(iter(data.values()))) > argument_count:
                 self.logger.info(f'Dropping extra arguments from {name}.')
             master_dict = ma.MasterDict({k: cls(self, *(v[:argument_count])) for k, v in data.items()}, name,
                                         asset_path)
