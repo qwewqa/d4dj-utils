@@ -24,67 +24,19 @@ class Trigger:
         return self.time < other.time
 
 
-class Timer:
-    def __init__(self, timeline: 'Timeline', callback: TimelineCallback):
-        def cb(tl):
-            callback(tl)
-            self.reset()
-
-        self.timeline = timeline
-        self._duration = 0
-        self._callback = cb
-        self._ongoing_time_remaining = None
-        self._trigger = None
-
-    @property
-    def running(self):
-        return self._trigger is not None
-
-    @property
-    def duration(self):
-        return self._duration
-
-    def start(self):
-        if self.running:
-            return
-        if self._duration <= 0:
-            raise RuntimeError('Timer not set.')
-        if self._ongoing_time_remaining is not None:
-            self._trigger = self.timeline.schedule(self._ongoing_time_remaining, self._callback)
-        else:
-            self._trigger = self.timeline.schedule(self._duration, self._callback)
-
-    def pause(self):
-        if self.running:
-            self._ongoing_time_remaining = self._trigger.time - self.timeline.time
-            self._trigger.cancel()
-            self._trigger = None
-
-    def reset(self):
-        if self.running:
-            self._trigger.cancel()
-            self._trigger = None
-        self._ongoing_time_remaining = None
-
-    def set(self, duration):
-        if self.running:
-            self.reset()
-            self._duration = duration
-            self.start()
-        else:
-            self._duration = duration
-        return self
-
-
 class Timeline:
     def __init__(self):
         self.time = 0
         self.active = False
+        self.is_heap = False
         self._queue = []
 
     def add(self, time: float, callback: TimelineCallback):
         trig = Trigger(time, callback)
         if self.active:
+            if not self.is_heap:
+                self.is_heap = True
+                heapq.heapify(self._queue)
             heapq.heappush(self._queue, trig)
         else:
             self._queue.append(trig)
@@ -97,9 +49,15 @@ class Timeline:
         if self.active:
             return
         self.active = True
-        heapq.heapify(self._queue)
+        if self.is_heap:
+            heapq.heapify(self._queue)
+        else:
+            self._queue = sorted(self._queue)[::-1]
         while self._queue:
-            trigger = heapq.heappop(self._queue)
+            if self.is_heap:
+                trigger = heapq.heappop(self._queue)
+            else:
+                trigger = self._queue.pop()
             if not trigger.cancelled:
                 trigger.callback(self)
         self.active = False
@@ -191,6 +149,7 @@ def get_chart_scoring_data(chart: Chart,
     tl.add(chart.info.fever_start, enable_fever_cb)
     tl.add(chart.info.fever_end, disable_fever_cb)
 
+    tl.fever_multiplier = 1.0
     if n_fever_notes := sum(1 for n in chart.notes if chart.info.fever_start <= n.time < chart.info.fever_end):
         fever_note_fraction = n_fever_notes / len(chart.notes)
         fever_multiplier = (0.28 / fever_note_fraction) ** 0.6
@@ -237,6 +196,9 @@ def calculate_score(chart: Union[Chart, ChartMaster],
 
     if not chart.info:
         return None
+
+    if autoplay:
+        enable_combo_bonus = False
 
     timeline = Timeline()
     timeline.active_skill_index = -1
@@ -312,7 +274,7 @@ def calculate_score(chart: Union[Chart, ChartMaster],
                                                   (1 + skill.score_up_rate / 100)))
                 else:
                     timeline.score += accuracy * math.floor(base_score * multiplier)
-                    timeline.score += 0.9 * (1 - accuracy) * math.floor(base_score * multiplier)
+                    timeline.score += (1 - accuracy) * math.floor(0.9 * base_score * multiplier)
             if not autoplay:
                 timeline.combo += 1
 
