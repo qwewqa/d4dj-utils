@@ -90,3 +90,4 @@ class GachaType(Enum):
     Birthday = 4
     Special = 5
     Revival = 6
+    Unknown_7 = 7
