@@ -14,6 +14,8 @@ class ExchangeMaster(MasterAsset):
     end_date: msgpack.Timestamp
     is_tab_visible: bool
     is_polling_place: bool
+    unknown1: str = ''
+    unknown2: int = -1
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
@@ -28,4 +30,6 @@ class ExchangeMaster(MasterAsset):
             'end_date': self.end_datetime,
             'is_tab_visible': self.is_tab_visible,
             'is_polling_place': self.is_polling_place,
+            'unknown1': self.unknown1,
+            'unknown2': self.unknown2,
         }
