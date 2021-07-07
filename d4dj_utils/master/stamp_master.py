@@ -25,7 +25,7 @@ class StampMaster(MasterAsset):
 
     @property
     def quote(self):
-        if quote := re.search(r'「(.*)」', self.description):
+        if quote := re.search(r'[「"](.*)[」"]', self.description):
             return str(quote.group(1))
         return None
 
