@@ -72,7 +72,7 @@ class GachaMaster(MasterAsset):
 
     @property
     def sub_bonus_table_rate(self):
-        return self.assets.gacha_table_rate_master.get(self.sub_bonus_table_ids)
+        return self.assets.gacha_table_rate_master.get(self.sub_bonus_table_rate_id)
 
     @property
     def sub_bonus_tables(self):
