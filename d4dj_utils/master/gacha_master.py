@@ -38,6 +38,11 @@ class GachaMaster(MasterAsset):
     select_bonus_reward_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
     pick_up_duplicate_bonus_stock_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
     pick_up_duplicate_bonus_stock_amounts: Sequence[int] = dataclasses.field(default_factory=lambda: [])
+    sub_bonus_max_value: int = 0
+    sub_bonus_table_rate_id: int = 0
+    sub_bonus_table_ids: int = 0
+    main_bonus_frame_text: str = ''
+    sub_bonus_frame_text: str = ''
 
     @property
     def table_rates(self):
@@ -64,6 +69,17 @@ class GachaMaster(MasterAsset):
         return [[self.assets.gacha_table_master[gtmid[0]]
                  for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
                 for tid in self.bonus_table_ids]
+
+    @property
+    def sub_bonus_table_rate(self):
+        return self.assets.gacha_table_rate_master.get(self.sub_bonus_table_ids)
+
+    @property
+    def sub_bonus_tables(self):
+        cur = self.assets.db.cursor()
+        return [[self.assets.gacha_table_master[gtmid[0]]
+                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
+                for tid in self.sub_bonus_table_ids]
 
     @property
     def gacha_type(self):
@@ -130,4 +146,9 @@ class GachaMaster(MasterAsset):
             'pick_up_duplicate_bonus_stock': self.pick_up_duplicate_bonus_stock,
             'pick_up_duplicate_bonus_stock_amounts': self.pick_up_duplicate_bonus_stock_amounts,
             'draw_data': self.draw_data,
+            'sub_bonus_max_value': self.sub_bonus_max_value,
+            'sub_bonus_table_rate': self.sub_bonus_table_rate,
+            'sub_bonus_tables': self.sub_bonus_tables,
+            'main_bonus_frame_text': self.main_bonus_frame_text,
+            'sub_bonus_frame_text': self.sub_bonus_frame_text,
         }
