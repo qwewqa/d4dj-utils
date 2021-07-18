@@ -44,6 +44,9 @@ class GachaMaster(MasterAsset):
     main_bonus_frame_text: str = ''
     sub_bonus_frame_text: str = ''
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def table_rates(self):
         return [self.assets.gacha_table_rate_master.get(rid) for rid in self.table_rate_ids]

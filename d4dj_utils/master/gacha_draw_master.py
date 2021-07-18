@@ -16,6 +16,9 @@ class GachaDrawMaster(MasterAsset):
 
     db_fields = ['id', 'gacha_id']
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def gacha(self):
         return self.assets.gacha_master.get(self.gacha_id)

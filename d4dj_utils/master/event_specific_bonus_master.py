@@ -22,6 +22,9 @@ class EventSpecificBonusMaster(MasterAsset):
     event_point_parameter_bonus_id: int = 0
     event_point_parameter_bonus_rate: int = 0
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def characters(self):
         return [self.assets.character_master[cid] for cid in self.character_ids]

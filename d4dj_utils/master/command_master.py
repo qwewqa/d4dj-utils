@@ -10,6 +10,9 @@ class CommandMaster(MasterAsset):
     title: str
     command: str
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {'command': self.command}

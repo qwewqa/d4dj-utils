@@ -12,6 +12,9 @@ class RewardMaster(MasterAsset):
     reward_id: int
     amount: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def reward_category(self) -> 'RewardCategory':
         return RewardCategory(self.reward_category_id)

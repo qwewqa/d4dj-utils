@@ -12,6 +12,9 @@ class RarityMaster(MasterAsset):
     limit_break_bonuses: Tuple[int]
     seal_amount: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def max_level(self):
         return max(self.max_levels)

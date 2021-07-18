@@ -19,6 +19,13 @@ class MusicMixMaster(MasterAsset):
     fade_in_beats: ClassVar[int] = 4
     fade_start_gap_seconds: ClassVar[float] = 2.0
 
+    def __hash__(self):
+        return self.id.__hash__()
+
+    @property
+    def id(self):
+        return self.music_id, self.section_id
+
     @classmethod
     def create_for_full_song(cls, asset_manager, music, length):
         cls(asset_manager=asset_manager,

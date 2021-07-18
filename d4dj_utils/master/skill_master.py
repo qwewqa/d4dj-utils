@@ -15,6 +15,9 @@ class SkillMaster(MasterAsset):
     max_seconds: float = 0
     perfect_score_up_rate: int = 0
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {

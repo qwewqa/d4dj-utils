@@ -17,6 +17,9 @@ class ExchangeMaster(MasterAsset):
     category_name: str = ''
     order: int = 0
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {

@@ -11,6 +11,9 @@ class ConditionMaster(MasterAsset):
     category_id: int
     value: Tuple[int]
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def category(self) -> 'ConditionCategory':
         return ConditionCategory(self.category_id)

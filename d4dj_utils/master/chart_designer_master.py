@@ -9,6 +9,9 @@ class ChartDesignerMaster(MasterAsset):
     id: int
     name: str
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def name_description(self) -> str:
         return f'{self.id}'

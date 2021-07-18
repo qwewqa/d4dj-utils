@@ -18,6 +18,9 @@ class MissionGroupMaster(MasterAsset):
     reset_value: int
     subscription_id: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def category(self):
         return MissionCategory(self.category_id)

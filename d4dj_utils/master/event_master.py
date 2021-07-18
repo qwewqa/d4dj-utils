@@ -33,6 +33,9 @@ class EventMaster(MasterAsset):
     show_mission_button: bool
     bgm_path: str
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def event_type(self):
         return EventType(self.event_type_id)

@@ -16,6 +16,13 @@ class LoginBonusItemMaster(MasterAsset):
 
     db_fields = ['login_bonus_id', 'sequence']
 
+    def __hash__(self):
+        return self.id.__hash__()
+
+    @property
+    def id(self):
+        return self.login_bonus_id, self.sequence
+
     @property
     def login_bonus(self):
         return self.assets.login_bonus_master[self.login_bonus_id]

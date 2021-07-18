@@ -13,6 +13,9 @@ class GachaTableMaster(MasterAsset):
 
     db_fields = ['id', 'table_id']
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def card(self):
         return self.assets.card_master.get(self.card_id)

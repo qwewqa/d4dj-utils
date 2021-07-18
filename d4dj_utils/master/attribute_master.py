@@ -17,6 +17,9 @@ class AttributeMaster(MasterAsset):
     id: int
     name: str
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def en_name(self) -> str:
         return attribute_translations.get(self.name, self.name)

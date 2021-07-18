@@ -15,6 +15,9 @@ class CharacterMaster(MasterAsset):
     full_name_english: str
     color_code: str
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def unit(self):
         return self.assets.unit_master[self.unit_id]

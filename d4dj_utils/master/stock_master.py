@@ -25,6 +25,9 @@ class StockMaster(MasterAsset):
     end_date: msgpack.Timestamp
     is_appropriate_sales: bool
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def category(self):
         return StockCategory(self.category_id)

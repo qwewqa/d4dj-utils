@@ -31,6 +31,9 @@ class CardMaster(MasterAsset):
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def attribute(self):
         return self.assets.attribute_master[self.attribute_id]

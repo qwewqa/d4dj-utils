@@ -14,6 +14,9 @@ class StampMaster(MasterAsset):
     description: str
     has_voice: bool
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def is_released(self):
         return (self.id < 10000 or

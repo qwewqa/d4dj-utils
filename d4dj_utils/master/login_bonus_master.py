@@ -22,6 +22,9 @@ class LoginBonusMaster(MasterAsset):
     date_positions: Sequence[int]
     limit_days: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def login_bonus_type(self):
         return LoginBonusType(self.login_bonus_type_id)

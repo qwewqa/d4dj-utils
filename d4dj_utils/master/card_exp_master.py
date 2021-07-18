@@ -9,6 +9,9 @@ class CardExpMaster(MasterAsset):
     level: int
     total_exp: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def id(self):
         return self.level

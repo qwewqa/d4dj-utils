@@ -11,6 +11,9 @@ class GachaTableRateMaster(MasterAsset):
     tab_name: str
     description: str
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def normalized_rates(self):
         rate_sum = sum(self.rates)

@@ -11,6 +11,13 @@ class ChartNoteCountMaster(MasterAsset):
     section_id: int
     count: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
+    @property
+    def id(self):
+        return self.chart_id, self.section_id
+
     @property
     def section(self):
         return ChartSectionType(self.section_id)

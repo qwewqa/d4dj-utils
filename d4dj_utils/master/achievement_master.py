@@ -21,6 +21,9 @@ class AchievementMaster(MasterAsset):
     is_hidden: bool
     notify_type_id: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def rewards(self):
         return [self.assets.reward_master[reward_id] for reward_id in self.reward_ids]

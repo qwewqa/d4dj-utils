@@ -30,6 +30,9 @@ class ExchangeItemMaster(MasterAsset):
     required_stock_id_4: int
     required_stock_amount_4: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def exchange(self):
         return self.assets.exchange_master.get(self.exchange_id)

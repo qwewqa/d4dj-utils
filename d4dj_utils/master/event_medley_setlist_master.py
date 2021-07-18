@@ -12,6 +12,9 @@ class EventMedleySetlistMaster(MasterAsset):
     music_ids: Sequence[int]
     required_point: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def music(self):
         return [self.assets.music_master.get(mid) for mid in self.music_ids]

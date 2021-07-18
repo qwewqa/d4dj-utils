@@ -22,6 +22,9 @@ class ChartMaster(MasterAsset):
     override_level: str
     chart_designer_id: Any
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def display_level(self):
         return self.override_level or str(math.floor(self.level)) + ('+' if self.level % 1 == 0.5 else '')

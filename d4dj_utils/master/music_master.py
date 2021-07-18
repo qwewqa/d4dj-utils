@@ -41,6 +41,9 @@ class MusicMaster(MasterAsset):
     is_tutorial: bool
     can_fair_use: bool
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def category(self) -> 'MusicCategory':
         return MusicCategory(self.category_id)

@@ -17,6 +17,9 @@ class MissionDetailMaster(MasterAsset):
     command_id: int
     home_priority: int
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def panel(self):
         return self.assets.mission_panel_master[self.panel_id]

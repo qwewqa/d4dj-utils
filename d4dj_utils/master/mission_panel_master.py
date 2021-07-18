@@ -13,6 +13,9 @@ class MissionPanelMaster(MasterAsset):
     name: str
     all_complete_reward_ids: Tuple[int]
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def group(self):
         return self.assets.mission_group_master[self.group_id]

@@ -15,6 +15,9 @@ class UnitMaster(MasterAsset):
     short_name: str
     init_deck_character_ids: Tuple[int]
 
+    def __hash__(self):
+        return self.id.__hash__()
+
     @property
     def init_deck_characters(self):
         return [self.assets.character_master[cid] for cid in self.init_deck_character_ids]
