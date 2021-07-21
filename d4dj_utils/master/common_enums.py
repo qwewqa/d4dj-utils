@@ -11,6 +11,7 @@ class EventType(int, Enum):
     Medley = 2
     Poker = 3
     Raid = 4
+    Slot = 5
 
 
 class ChartSectionType(int, Enum):
