@@ -67,3 +67,4 @@ class AchievementNotifyType(Enum):
     Default = 0
     PokerHand = 1
     BingoCard = 2
+    Slot = 3
