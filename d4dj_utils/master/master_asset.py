@@ -105,6 +105,10 @@ class MasterAsset(abc.ABC):
     def as_tuple(self):
         return dataclasses.astuple(self)
 
+    @classmethod
+    def default(cls, assets) -> Dict:
+        raise NotImplementedError
+
 
 KT = TypeVar('KT')
 VT = TypeVar('VT', bound=MasterAsset)

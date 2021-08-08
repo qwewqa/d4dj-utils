@@ -30,6 +30,8 @@ class CardMaster(MasterAsset):
     head_x: Tuple[int]
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
+    passive_skill_id: int = 0
+    unknown1: int = 0
 
     def __hash__(self):
         return self.id.__hash__()
@@ -67,6 +69,10 @@ class CardMaster(MasterAsset):
 
     def icon_path(self, limit_break):
         return self.assets.path / f'ondemand/card_icon/card_icon_{str(self.id).zfill(9)}_{1 if limit_break else 0}.jpg'
+
+    @property
+    def passive_skill(self):
+        return self.assets.passive_skill_master[self.passive_skill_id]
 
     initial_card_cutoff = pytz.timezone('Asia/Tokyo').localize(datetime.datetime(year=2020, month=10, day=1))
 
@@ -130,7 +136,9 @@ class CardMaster(MasterAsset):
             'cloth_card_id': self.cloth_card_id,
             'debut_order': self.debut_order,
             'head_x': self.head_x,
-            'head_y': self.head_y
+            'head_y': self.head_y,
+            'passive_skill': self.passive_skill,
+            'unknown1': self.unknown1,
         }
 
 

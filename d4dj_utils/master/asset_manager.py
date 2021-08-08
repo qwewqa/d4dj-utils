@@ -77,6 +77,8 @@ class AssetManager:
         self.music_master: ma.MasterDict[int, MusicMaster] = self._load_master(MusicMaster)
         from d4dj_utils.master.music_mix_master import MusicMixMaster
         self.music_mix_master: ma.MasterDict[Tuple[int, int], MusicMixMaster] = self._load_master(MusicMixMaster)
+        from d4dj_utils.master.passive_skill_master import PassiveSkillMaster
+        self.passive_skill_master: ma.MasterDict[int, PassiveSkillMaster] = self._load_master(PassiveSkillMaster)
         from d4dj_utils.master.rarity_master import RarityMaster
         self.rarity_master: ma.MasterDict[int, RarityMaster] = self._load_master(RarityMaster)
         from d4dj_utils.master.reward_master import RewardMaster
@@ -113,6 +115,8 @@ class AssetManager:
         # What remains is the number of arguments to keep from the msgpack file itself.
         argument_count = len(inspect.signature(cls.__init__).parameters) - 2
         asset_path = self.path / f'Master/{name}.msgpack'
+        if not asset_path.exists():
+            return ma.MasterDict(cls.default(self), name, asset_path)
         with asset_path.open('rb') as f:
             data = msgpack.load(f, strict_map_key=False, use_list=False)
         if self.drop_extra_fields:
