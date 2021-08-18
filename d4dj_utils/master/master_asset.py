@@ -88,7 +88,10 @@ class MasterAsset(abc.ABC):
             datetime.timezone.utc) < self.end_datetime
 
     def convert_timestamp(self, timestamp: msgpack.Timestamp):
-        return self.assets.timezone.localize(timestamp.to_datetime().replace(tzinfo=None))
+        try:
+            return self.assets.timezone.localize(timestamp.to_datetime().replace(tzinfo=None))
+        except OverflowError:
+            return self.assets.timezone.localize(datetime.datetime.fromtimestamp(0))
 
     @property
     def start_datetime(self) -> Optional[datetime.datetime]:
