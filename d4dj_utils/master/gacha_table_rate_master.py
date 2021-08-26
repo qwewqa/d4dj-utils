@@ -8,12 +8,30 @@ from d4dj_utils.master.master_asset import MasterAsset
 class GachaTableRateMaster(MasterAsset):
     id: int
     rates: Tuple[int]
+    rarity_ids: Tuple[int]
     tab_name: str
     description: str
-    rarity_ids: Tuple[int] = ()
 
     def __hash__(self):
         return self.id.__hash__()
+
+    def __init__(self, *args):
+        self.assets = args[0]
+        args = args[1:]
+        if len(args) == 5:
+            self.id = args[0]
+            self.rates = args[1]
+            self.rarity_ids = args[2]
+            self.tab_name = args[3]
+            self.description = args[4]
+        elif len(args) == 4:
+            self.id = args[0]
+            self.rates = args[1]
+            self.rarity_ids = ()
+            self.tab_name = args[3]
+            self.description = args[4]
+        else:
+            raise NotImplementedError()
 
     @property
     def normalized_rates(self):
