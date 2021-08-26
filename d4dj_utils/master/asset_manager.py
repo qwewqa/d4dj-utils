@@ -115,7 +115,10 @@ class AssetManager:
         name = cls.__name__
         # -1 for self, and -1 for the asset_manager argument.
         # What remains is the number of arguments to keep from the msgpack file itself.
-        argument_count = len(inspect.signature(cls.__init__).parameters) - 2
+        sig = inspect.signature(cls.__init__)
+        argument_count = len(sig.parameters) - 2
+        if any(param.kind == param.kind.VAR_POSITIONAL for param in sig.parameters.values()):
+            argument_count = 999
         asset_path = self.path / f'Master/{name}.msgpack'
         if not asset_path.exists():
             return ma.MasterDict(cls.default(self), name, asset_path)

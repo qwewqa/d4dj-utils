@@ -37,6 +37,10 @@ class GachaRouletteMaster(MasterAsset):
             'draw_limit': self.draw_limit,
         }
 
+    @classmethod
+    def default(cls, assets) -> Dict:
+        return {}
+
 
 class GachaRouletteType(Enum):
     PickUpUp = 1

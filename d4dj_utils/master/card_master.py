@@ -31,7 +31,7 @@ class CardMaster(MasterAsset):
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
     passive_skill_id: int = 0
-    unknown1: int = 0
+    gacha_card_attribute: int = 0
 
     def __hash__(self):
         return self.id.__hash__()

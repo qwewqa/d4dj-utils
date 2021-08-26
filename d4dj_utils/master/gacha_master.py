@@ -11,7 +11,7 @@ from d4dj_utils.master.master_asset import MasterAsset
 
 class GachaMaster:
     def __new__(cls, *args, **kwargs):
-        if len(args) <= 27:
+        if len(args) == 27:
             return GachaMasterNew(*args, **kwargs)
         else:
             return GachaMasterLegacy(*args, **kwargs)

@@ -28,8 +28,8 @@ class GachaTableRateMaster(MasterAsset):
             self.id = args[0]
             self.rates = args[1]
             self.rarity_ids = ()
-            self.tab_name = args[3]
-            self.description = args[4]
+            self.tab_name = args[2]
+            self.description = args[3]
         else:
             raise NotImplementedError()
 
