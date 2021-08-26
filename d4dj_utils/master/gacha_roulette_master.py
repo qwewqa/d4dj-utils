@@ -12,7 +12,6 @@ class GachaRouletteMaster(MasterAsset):
     target_id: int
     effect_value: int
     draw_limit: int
-    is_stock: bool
 
     db_fields = ['id', 'gacha_id']
 
@@ -38,7 +37,6 @@ class GachaRouletteMaster(MasterAsset):
             'target_id': self.target_id,
             'effect_value': self.effect_value,
             'draw_limit': self.draw_limit,
-            'is_stock': self.is_stock,
         }
 
 
