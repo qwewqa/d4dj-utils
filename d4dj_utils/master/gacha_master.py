@@ -221,7 +221,7 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
                 for tid in self.sub_bonus_table_ids]
 
     @property
-    def gacha_category(self):
+    def category(self):
         return GachaCategory(self.gacha_type_id)
 
     @property
@@ -231,6 +231,10 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
     @property
     def bonus_selectable_cards(self):
         return [self.assets.card_master[cid] for cid in self.bonus_selectable_card_ids]
+
+    @property
+    def select_bonus_cards(self):
+        return self.bonus_selectable_cards
 
     @property
     def pick_up_duplicate_bonus_stock(self):
@@ -277,7 +281,7 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
             'has_pick_up_duplicate_bonus': self.has_pick_up_duplicate_bonus,
             'is_tutorial': self.is_tutorial,
             'ascending_sort_id': self.ascending_sort_id,
-            'gacha_category': self.gacha_category,
+            'category': self.category,
             'bonus_stock': self.bonus_stock,
             'bonus_selectable_cards_max_value': self.bonus_selectable_cards_max_value,
             'bonus_selectable_cards': self.bonus_selectable_cards,

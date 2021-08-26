@@ -7,7 +7,7 @@ from typing import Dict, Any, Tuple, Optional
 import msgpack
 import pytz
 
-from d4dj_utils.master.common_enums import GachaType
+from d4dj_utils.master.common_enums import GachaType, GachaCategory
 from d4dj_utils.master.event_master import EventMaster
 from d4dj_utils.master.gacha_master import GachaMaster
 from d4dj_utils.master.master_asset import MasterAsset
@@ -94,7 +94,7 @@ class CardMaster(MasterAsset):
         if self.start_datetime < self.initial_card_cutoff:
             return CardAvailability.Permanent
         if gacha := self.gacha:
-            if gacha.gacha_type == GachaType.Birthday:
+            if gacha.category == GachaCategory.Birthday:
                 return CardAvailability.Birthday
             elif any(n in gacha.summary for n in ['コラボ限定', 'collaboration only']):
                 return CardAvailability.Collab
