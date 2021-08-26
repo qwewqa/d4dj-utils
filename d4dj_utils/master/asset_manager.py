@@ -58,6 +58,8 @@ class AssetManager:
         self.gacha_draw_master: ma.MasterDict[int, GachaDrawMaster] = self._load_master(GachaDrawMaster)
         from d4dj_utils.master.gacha_master import GachaMaster
         self.gacha_master: ma.MasterDict[int, GachaMaster] = self._load_master(GachaMaster)
+        from d4dj_utils.master.gacha_roulette_master import GachaRouletteMaster
+        self.gacha_roulette_master: ma.MasterDict[int, GachaRouletteMaster] = self._load_master(GachaRouletteMaster)
         from d4dj_utils.master.gacha_table_master import GachaTableMaster
         self.gacha_table_master: ma.MasterDict[int, GachaTableMaster] = self._load_master(GachaTableMaster)
         from d4dj_utils.master.gacha_table_rate_master import GachaTableRateMaster
