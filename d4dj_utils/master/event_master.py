@@ -30,8 +30,8 @@ class EventMaster(MasterAsset):
     exchange_shop_id: int
     is_d4_fes_story: bool
     top_prefab_path: str
-    show_mission_button: bool
-    bgm_path: str
+    show_mission_button: bool = False
+    bgm_path: str = ''
 
     def __hash__(self):
         return self.id.__hash__()
