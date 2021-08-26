@@ -13,8 +13,6 @@ class GachaRouletteMaster(MasterAsset):
     effect_value: int
     draw_limit: int
 
-    db_fields = ['id', 'gacha_id']
-
     def __hash__(self):
         return self.id.__hash__()
 
