@@ -10,6 +10,7 @@ class GachaTableRateMaster(MasterAsset):
     rates: Tuple[int]
     tab_name: str
     description: str
+    rarity_ids: Tuple[int] = ()
 
     def __hash__(self):
         return self.id.__hash__()
@@ -32,4 +33,5 @@ class GachaTableRateMaster(MasterAsset):
             'normalized_rates': self.normalized_rates,
             'tab_name': self.tab_name,
             'description': self.description,
+            'rarity_ids': self.rarity_ids,
         }
