@@ -84,11 +84,16 @@ class RewardCategory(int, Enum):
 
 
 class GachaType(Enum):
+    Normal = 0
+    StepUp = 1
+
+
+class GachaCategory(Enum):
     Nothing = 0
     Normal = 1
     Tutorial = 2
     Event = 3
     Birthday = 4
-    Special = 5
+    StartDash = 5
     Revival = 6
-    Unknown_7 = 7
+    Special = 7

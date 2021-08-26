@@ -129,10 +129,14 @@ class AssetManager:
         else:
             master_dict = ma.MasterDict({k: cls(self, *v) for k, v in data.items()}, name, asset_path)
         self.masters[name] = master_dict
-        if cls.db_fields:
+        if master_dict:
+            db_fields = next(iter(master_dict.values())).db_fields
+        else:
+            db_fields = None
+        if db_fields:
             with self.db:
                 cur = self.db.cursor()
-                fields = [cls.__dataclass_fields__[db_field] for db_field in cls.db_fields]
+                fields = [cls.__dataclass_fields__[db_field] for db_field in db_fields]
                 type_mapping = {
                     bool: 'integer',
                     int: 'integer',
@@ -142,10 +146,10 @@ class AssetManager:
                 }
                 cur.execute(f'CREATE TABLE {name}'
                             f'({", ".join(f"{field.name} {type_mapping[field.type]}" for field in fields)})')
-                insert_query = f'INSERT INTO {name} VALUES ({f", ".join(["?"] * len(cls.db_fields))})'
+                insert_query = f'INSERT INTO {name} VALUES ({f", ".join(["?"] * len(db_fields))})'
                 for value in master_dict.values():
                     field_dict = dataclasses.asdict(value)
-                    field_values = [field_dict[name] for name in cls.db_fields]
+                    field_values = [field_dict[name] for name in db_fields]
                     cur.execute(insert_query, field_values)
         return master_dict
 
