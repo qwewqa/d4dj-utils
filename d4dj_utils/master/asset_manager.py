@@ -4,7 +4,7 @@ import logging
 import sqlite3
 import textwrap
 from pathlib import Path
-from typing import Type, Dict, Tuple
+from typing import Type, Dict, Tuple, Optional
 
 import msgpack
 import pytz
@@ -111,7 +111,7 @@ class AssetManager:
     def get_master_paths(self):
         return (self.path / 'Master').glob('*Master.msgpack')
 
-    def _load_master(self, cls: Type[ma.MasterAsset]) -> ma.MasterDict:
+    def _load_master(self, cls: Type[ma.MasterAsset], override_path: Optional[Path] = None) -> ma.MasterDict:
         name = cls.__name__
         # -1 for self, and -1 for the asset_manager argument.
         # What remains is the number of arguments to keep from the msgpack file itself.
@@ -119,7 +119,13 @@ class AssetManager:
         argument_count = len(sig.parameters) - 2
         if any(param.kind == param.kind.VAR_POSITIONAL for param in sig.parameters.values()):
             argument_count = 999
-        asset_path = self.path / f'Master/{name}.msgpack'
+        archive_values = {}
+        if override_path is None:
+            asset_path = self.path / f'Master/{name}.msgpack'
+            for archive_path in self.path.glob(f'Master/{name}.*.msgpack'):
+                archive_values.update(self._load_master(cls, archive_path))
+        else:
+            asset_path = override_path
         if not asset_path.exists():
             return ma.MasterDict(cls.default(self), name, asset_path)
         with asset_path.open('rb') as f:
@@ -131,6 +137,8 @@ class AssetManager:
                                         asset_path)
         else:
             master_dict = ma.MasterDict({k: cls(self, *v) for k, v in data.items()}, name, asset_path)
+        archive_values.update(master_dict)
+        master_dict = ma.MasterDict({**archive_values, **master_dict}, name, asset_path)
         self.masters[name] = master_dict
         if master_dict:
             db_fields = next(iter(master_dict.values())).db_fields
