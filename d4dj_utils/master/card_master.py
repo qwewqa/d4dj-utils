@@ -138,7 +138,7 @@ class CardMaster(MasterAsset):
             'head_x': self.head_x,
             'head_y': self.head_y,
             'passive_skill': self.passive_skill,
-            'unknown1': self.unknown1,
+            'gacha_card_attribute': self.gacha_card_attribute,
         }
 
 

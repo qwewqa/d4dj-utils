@@ -1,11 +1,12 @@
 import dataclasses
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Dict, Any, Tuple, Sequence
+from typing import Dict, Any, Tuple, Sequence, TYPE_CHECKING, Union
 
 import msgpack
 
 from d4dj_utils.master.common_enums import GachaType, GachaCategory
+from d4dj_utils.master.gacha_bonus_master import GachaBonusMaster
 from d4dj_utils.master.master_asset import MasterAsset
 
 
@@ -21,9 +22,9 @@ class GachaMaster:
 class GachaMasterNew(GachaMaster, MasterAsset):
     id: int
     name: str
-    table_rate_ids: Sequence[int]
-    table_ids: Sequence[int]
-    pick_up_card_ids: Sequence[int]
+    table_rate_ids: Tuple[int, ...]
+    table_ids: Tuple[int, ...]
+    pick_up_card_ids: Tuple[int, ...]
     summary: str
     has_specific_bg: bool
     start_date: msgpack.Timestamp
@@ -41,8 +42,8 @@ class GachaMasterNew(GachaMaster, MasterAsset):
     select_bonus_max_value: int
     select_bonus_card_ids: Tuple[int, ...]
     select_bonus_reward_ids: Tuple[int, ...]
-    pick_up_duplicate_bonus_stock_ids: Sequence[int]
-    pick_up_duplicate_bonus_stock_amounts: Sequence[int]
+    pick_up_duplicate_bonus_stock_ids: Tuple[int, ...]
+    pick_up_duplicate_bonus_stock_amounts: Tuple[int, ...]
     gacha_type_id: int
     step_loop_count: int
 
@@ -51,6 +52,14 @@ class GachaMasterNew(GachaMaster, MasterAsset):
 
     def __hash__(self):
         return self.id.__hash__()
+
+    @property
+    def bonus(self):
+        return self.assets.gacha_bonus_master.get((self.id, True))
+
+    @property
+    def sub_bonus(self):
+        return self.assets.gacha_bonus_master.get((self.id, False))
 
     @property
     def table_rates(self):
@@ -146,9 +155,9 @@ class GachaMasterNew(GachaMaster, MasterAsset):
 class GachaMasterLegacy(GachaMaster, MasterAsset):
     id: int
     name: str
-    table_rate_ids: Sequence[int]
-    table_ids: Sequence[int]
-    pick_up_card_ids: Sequence[int]
+    table_rate_ids: Tuple[int, ...]
+    table_ids: Tuple[int, ...]
+    pick_up_card_ids: Tuple[int, ...]
     summary: str
     has_specific_bg: bool
     start_date: msgpack.Timestamp
@@ -158,7 +167,7 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
     live_2d_bg: Sequence[str]
     bonus_max_value: int
     bonus_table_rate_id: int
-    bonus_table_ids: Sequence[int]
+    bonus_table_ids: Tuple[int, ...]
     login_trigger_minutes: int
     show_home_animation: bool
     has_pick_up_duplicate_bonus: bool
@@ -167,13 +176,13 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
     gacha_type_id: int
     bonus_stock_id: int
     bonus_selectable_cards_max_value: int = 0
-    bonus_selectable_card_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
-    select_bonus_reward_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
-    pick_up_duplicate_bonus_stock_ids: Sequence[int] = dataclasses.field(default_factory=lambda: [])
-    pick_up_duplicate_bonus_stock_amounts: Sequence[int] = dataclasses.field(default_factory=lambda: [])
+    bonus_selectable_card_ids: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
+    select_bonus_reward_ids: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
+    pick_up_duplicate_bonus_stock_ids: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
+    pick_up_duplicate_bonus_stock_amounts: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
     sub_bonus_max_value: int = 0
     sub_bonus_table_rate_id: int = 0
-    sub_bonus_table_ids: Sequence[int] = ()
+    sub_bonus_table_ids: Tuple[int, ...] = ()
     main_bonus_frame_text: str = ''
     sub_bonus_frame_text: str = ''
 
@@ -182,6 +191,34 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
 
     def __hash__(self):
         return self.id.__hash__()
+
+    @property
+    def bonus(self):
+        if not self.bonus_max_value:
+            return None
+        return GachaBonusMaster(
+            self.assets,
+            self.id,
+            True,
+            self.bonus_max_value,
+            self.bonus_table_rate_id,
+            self.bonus_table_ids,
+            self.main_bonus_frame_text,
+        )
+
+    @property
+    def sub_bonus(self):
+        if not self.sub_bonus_max_value:
+            return None
+        return GachaBonusMaster(
+            self.assets,
+            self.id,
+            False,
+            self.sub_bonus_max_value,
+            self.sub_bonus_table_rate_id,
+            self.sub_bonus_table_ids,
+            self.sub_bonus_frame_text,
+        )
 
     @property
     def table_rates(self):
@@ -221,6 +258,10 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
                 for tid in self.sub_bonus_table_ids]
 
     @property
+    def gacha_type(self):
+        return GachaType.Normal
+
+    @property
     def category(self):
         return GachaCategory(self.gacha_type_id)
 
@@ -235,6 +276,10 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
     @property
     def select_bonus_cards(self):
         return self.bonus_selectable_cards
+
+    @property
+    def select_bonus_max_value(self):
+        return self.bonus_selectable_cards_max_value
 
     @property
     def pick_up_duplicate_bonus_stock(self):
@@ -295,3 +340,7 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
             'main_bonus_frame_text': self.main_bonus_frame_text,
             'sub_bonus_frame_text': self.sub_bonus_frame_text,
         }
+
+
+if TYPE_CHECKING:
+    GachaMaster = Union[GachaMasterNew, GachaMasterLegacy]

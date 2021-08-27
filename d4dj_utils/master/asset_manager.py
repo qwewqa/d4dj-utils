@@ -54,6 +54,8 @@ class AssetManager:
         self.exchange_item_master: ma.MasterDict[int, ExchangeItemMaster] = self._load_master(ExchangeItemMaster)
         from d4dj_utils.master.exchange_master import ExchangeMaster
         self.exchange_master: ma.MasterDict[int, ExchangeMaster] = self._load_master(ExchangeMaster)
+        from d4dj_utils.master.gacha_bonus_master import GachaBonusMaster
+        self.gacha_bonus_master: ma.MasterDict[Tuple[int, bool], GachaBonusMaster] = self._load_master(GachaBonusMaster)
         from d4dj_utils.master.gacha_draw_master import GachaDrawMaster
         self.gacha_draw_master: ma.MasterDict[int, GachaDrawMaster] = self._load_master(GachaDrawMaster)
         from d4dj_utils.master.gacha_master import GachaMaster
@@ -111,7 +113,7 @@ class AssetManager:
     def get_master_paths(self):
         return (self.path / 'Master').glob('*Master.msgpack')
 
-    def _load_master(self, cls: Type[ma.MasterAsset], override_path: Optional[Path] = None) -> ma.MasterDict:
+    def _load_master(self, cls: Type[ma.MasterAsset], archive_load_path: Optional[Path] = None) -> ma.MasterDict:
         name = cls.__name__
         # -1 for self, and -1 for the asset_manager argument.
         # What remains is the number of arguments to keep from the msgpack file itself.
@@ -120,12 +122,12 @@ class AssetManager:
         if any(param.kind == param.kind.VAR_POSITIONAL for param in sig.parameters.values()):
             argument_count = 999
         archive_values = {}
-        if override_path is None:
+        if archive_load_path is None:
             asset_path = self.path / f'Master/{name}.msgpack'
             for archive_path in self.path.glob(f'Master/{name}.*.msgpack'):
                 archive_values.update(self._load_master(cls, archive_path))
         else:
-            asset_path = override_path
+            asset_path = archive_load_path
         if not asset_path.exists():
             return ma.MasterDict(cls.default(self), name, asset_path)
         with asset_path.open('rb') as f:
@@ -137,6 +139,8 @@ class AssetManager:
                                         asset_path)
         else:
             master_dict = ma.MasterDict({k: cls(self, *v) for k, v in data.items()}, name, asset_path)
+        if archive_load_path:
+            return master_dict
         archive_values.update(master_dict)
         master_dict = ma.MasterDict({**archive_values, **master_dict}, name, asset_path)
         self.masters[name] = master_dict
