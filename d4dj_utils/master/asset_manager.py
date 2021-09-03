@@ -6,6 +6,7 @@ import textwrap
 from pathlib import Path
 from typing import Type, Dict, Tuple, Optional
 
+import lz4.block
 import msgpack
 import pytz
 
@@ -132,6 +133,16 @@ class AssetManager:
             return ma.MasterDict(cls.default(self), name, asset_path)
         with asset_path.open('rb') as f:
             data = msgpack.load(f, strict_map_key=False, use_list=False)
+        try:
+            if data.code == 99:
+                data = data.data
+                msgpack_code = data[0]
+                size = int.from_bytes(data[1:5], byteorder='big', signed=True)
+                data = data[5:]
+                data = lz4.block.decompress(data, size)
+                data = msgpack.loads(data, strict_map_key=False, use_list=False)
+        except AttributeError:
+            pass
         if self.drop_extra_fields:
             if len(next(iter(data.values()))) > argument_count:
                 self.logger.info(f'Dropping extra arguments from {name}.')
