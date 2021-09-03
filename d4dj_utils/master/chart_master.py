@@ -92,7 +92,7 @@ class ChartMaster(MasterAsset):
 
     @property
     def mix_path(self) -> Path:
-        return self.chart_path.with_name(f'{self.chart_path.name}.mix').with_suffix('.png')
+        return self.chart_path.with_suffix('.mix.png')
 
     def load_chart_data(self):
         with self.chart_path.open('rb') as f:
