@@ -46,6 +46,8 @@ class GachaMasterNew(GachaMaster, MasterAsset):
     pick_up_duplicate_bonus_stock_amounts: Tuple[int, ...]
     gacha_type_id: int
     step_loop_count: int
+    unknown1: Any
+    unknown2: Any
 
     def __new__(cls, *args, **kwargs):
         return object.__new__(cls)
