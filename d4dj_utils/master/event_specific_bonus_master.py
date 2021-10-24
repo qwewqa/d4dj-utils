@@ -13,14 +13,6 @@ class EventSpecificBonusMaster(MasterAsset):
     character_match_point_bonus_value: int
     attribute_match_point_bonus_value: int
     all_match_point_bonus_value: int
-    character_match_parameter_bonus_id: int
-    character_match_parameter_bonus_value: int
-    attribute_match_parameter_bonus_id: int
-    attribute_match_parameter_bonus_value: int
-    all_match_parameter_bonus_id: int
-    all_match_parameter_bonus_value: int
-    event_point_parameter_bonus_id: int = 0
-    event_point_parameter_bonus_rate: int = 0
 
     def __hash__(self):
         return self.id.__hash__()
@@ -35,18 +27,22 @@ class EventSpecificBonusMaster(MasterAsset):
 
     @property
     def character_match_parameter_bonus(self) -> 'ParameterBonus':
+        return None
         return ParameterBonus(self.character_match_parameter_bonus_id)
 
     @property
     def attribute_match_parameter_bonus(self) -> 'ParameterBonus':
+        return None
         return ParameterBonus(self.attribute_match_parameter_bonus_id)
 
     @property
     def all_match_parameter_bonus(self) -> 'ParameterBonus':
+        return None
         return ParameterBonus(self.all_match_parameter_bonus_id)
 
     @property
     def event_point_parameter_bonus(self) -> 'ParameterBonus':
+        return None
         return ParameterBonus(self.event_point_parameter_bonus_id + 1)
 
     @property
