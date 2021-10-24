@@ -84,6 +84,7 @@ class CardMaster(MasterAsset):
 
     @cached_property
     def event(self) -> Optional[EventMaster]:
+        return None
         return next((event for event in self.assets.event_master.values()
                      if abs((event.start_datetime - self.start_datetime).total_seconds()) <= 86400 and
                      (event.bonus.attribute == self.attribute or not event.bonus.attribute) and
