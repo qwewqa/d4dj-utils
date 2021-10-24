@@ -48,7 +48,7 @@ class GachaMasterNew(GachaMaster, MasterAsset):
     step_loop_count: int
     unknown1: Any
     unknown2: Any
-    unknown3: Any
+    unknown3: Any = None
 
     def __new__(cls, *args, **kwargs):
         return object.__new__(cls)
