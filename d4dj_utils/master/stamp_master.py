@@ -34,7 +34,7 @@ class StampMaster(MasterAsset):
 
     @property
     def audio_path(self):
-        return self.assets.path / 'plain' / 'voice' / 'stamp.acb-extracted' / f'Stamp_{self.id}.hca.wav'
+        return self.assets.path / 'plain' / 'voice' / f'Stamp_{self.id}.wav'
 
     @property
     def category(self):
