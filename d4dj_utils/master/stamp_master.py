@@ -23,7 +23,7 @@ class StampMaster(MasterAsset):
                 (10000 < self.id < 20000 and
                  (self.id - 10000) in self.assets.event_master and
                  self.assets.event_master[self.id - 10000].is_released) or
-                (20000 < self.id < 30000 and self.id <= 20010) or  # Hardcoding these two until a better way is found
+                (20000 < self.id < 30000 and self.id <= 20026) or  # Hardcoding these two until a better way is found
                 (30000 < self.id < 40000 and self.id <= 30001))
 
     @property
