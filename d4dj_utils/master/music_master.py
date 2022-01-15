@@ -1,4 +1,5 @@
 import contextlib
+import json
 import wave
 from dataclasses import dataclass
 from enum import Enum
@@ -76,14 +77,9 @@ class MusicMaster(MasterAsset):
     @cached_property
     def duration(self) -> Optional[float]:
         try:
-            wav_path = self.audio_path.with_name(self.audio_path.name + '.wav')
-            if not wav_path.exists():
-                self.decode_audio()
-            with contextlib.closing(wave.open(str(wav_path), 'r')) as f:
-                frames = f.getnframes()
-                rate = f.getframerate()
-                duration = frames / float(rate)
-                return duration
+            with open(self.audio_path.with_name(self.audio_path.name + '.json'), 'r', encoding='utf-8') as f:
+                audio_data = json.load(f)
+                return audio_data['sampleCount'] / audio_data['sampleRate']
         except:
             return None
 
