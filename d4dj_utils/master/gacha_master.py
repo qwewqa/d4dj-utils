@@ -49,6 +49,9 @@ class GachaMasterNew(GachaMaster, MasterAsset):
     unknown1: Any
     unknown2: Any
     unknown3: Any = None
+    unknown4: Any = None
+    unknown5: Any = None
+    unknown6: Any = None
 
     def __new__(cls, *args, **kwargs):
         return object.__new__(cls)
