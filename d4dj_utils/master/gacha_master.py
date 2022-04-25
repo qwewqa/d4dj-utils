@@ -12,7 +12,7 @@ from d4dj_utils.master.master_asset import MasterAsset
 
 class GachaMaster:
     def __new__(cls, *args, **kwargs):
-        if (isinstance(args[8], msgpack.Timestamp)
+        if (isinstance(args[8], bool)
                 and isinstance(args[9], msgpack.Timestamp)
                 and isinstance(args[10], msgpack.Timestamp)
                 and isinstance(args[11], int)):
