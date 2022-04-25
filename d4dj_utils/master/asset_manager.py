@@ -22,6 +22,8 @@ class AssetManager:
         self.path = Path(path)
         self.masters: Dict[str, ma.MasterDict] = {}
         self.db = sqlite3.connect(':memory:')  # So sql queries can be executed on some properties
+        from d4dj_utils.master.achievement_master import AchievementMaster
+        self.achievement_master: ma.MasterDict[int, AchievementMaster] = self._load_master(AchievementMaster)
         from d4dj_utils.master.attribute_master import AttributeMaster
         self.attribute_master: ma.MasterDict[int, AttributeMaster] = self._load_master(AttributeMaster)
         from d4dj_utils.master.card_exp_master import CardExpMaster
@@ -116,7 +118,7 @@ class AssetManager:
         name = cls.__name__
         # -1 for self, and -1 for the asset_manager argument.
         # What remains is the number of arguments to keep from the msgpack file itself.
-        init_fn = getattr(cls, 'new', cls.__init__)
+        init_fn = getattr(cls, 'new', cls)
         sig = inspect.signature(init_fn)
         argument_count = len(sig.parameters) - 2
         if any(param.kind == param.kind.VAR_POSITIONAL for param in sig.parameters.values()):
