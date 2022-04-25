@@ -12,10 +12,10 @@ from d4dj_utils.master.master_asset import MasterAsset
 
 class GachaMaster:
     def __new__(cls, *args, **kwargs):
-        if (isinstance(args[7], msgpack.Timestamp)
-                and isinstance(args[8], msgpack.Timestamp)
+        if (isinstance(args[8], msgpack.Timestamp)
                 and isinstance(args[9], msgpack.Timestamp)
-                and isinstance(args[10], int)):
+                and isinstance(args[10], msgpack.Timestamp)
+                and isinstance(args[11], int)):
             return GachaMasterA(*args, **kwargs)
         elif isinstance(args[14], bool):
             return GachaMasterNew(*args, **kwargs)
