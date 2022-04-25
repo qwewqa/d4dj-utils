@@ -12,12 +12,16 @@ from d4dj_utils.master.master_asset import MasterAsset
 
 class GachaMaster:
     def __new__(cls, *args, **kwargs):
-        if isinstance(args[10], int):
+        if (isinstance(args[7], msgpack.Timestamp)
+                and isinstance(args[8], msgpack.Timestamp)
+                and isinstance(args[9], msgpack.Timestamp)
+                and isinstance(args[10], int)):
             return GachaMasterA(*args, **kwargs)
         elif isinstance(args[14], bool):
             return GachaMasterNew(*args, **kwargs)
         else:
             return GachaMasterLegacy(*args, **kwargs)
+
 
 @dataclass
 class GachaMasterA(GachaMaster, MasterAsset):
@@ -155,6 +159,7 @@ class GachaMasterA(GachaMaster, MasterAsset):
             'step_loop_count': self.step_loop_count,
             'draw_data': self.draw_data,
         }
+
 
 @dataclass
 class GachaMasterNew(GachaMaster, MasterAsset):
