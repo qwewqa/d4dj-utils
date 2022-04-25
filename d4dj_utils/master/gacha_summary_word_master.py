@@ -16,3 +16,11 @@ class GachaSummaryWordMaster(MasterAsset):
         return {
             0: GachaSummaryWordMaster(id=0, text=""),
         }
+
+    @property
+    def one_line_description_items(self) -> Dict[str, Any]:
+        return {'text': self.text}
+
+    @property
+    def extended_description_items(self) -> Dict[str, str]:
+        return {'text': self.text}
