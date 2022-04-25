@@ -67,6 +67,8 @@ class AssetManager:
         self.gacha_table_master: ma.MasterDict[int, GachaTableMaster] = self._load_master(GachaTableMaster)
         from d4dj_utils.master.gacha_table_rate_master import GachaTableRateMaster
         self.gacha_table_rate_master: ma.MasterDict[int, GachaTableRateMaster] = self._load_master(GachaTableRateMaster)
+        from d4dj_utils.master.gacha_summary_word_master import GachaSummaryWordMaster
+        self.gacha_summary_word_master: ma.MasterDict[int, GachaSummaryWordMaster] = self._load_master(GachaSummaryWordMaster)
         from d4dj_utils.master.login_bonus_item_master import LoginBonusItemMaster
         self.login_bonus_item_master: ma.MasterDict[Tuple[int, int], LoginBonusItemMaster] = self._load_master(
             LoginBonusItemMaster)

@@ -121,6 +121,10 @@ class GachaMasterA(GachaMaster, MasterAsset):
         return self.pick_up_cards[0].event if self.pick_up_cards else None
 
     @property
+    def summary(self):
+        return self.assets.gacha_summary_word_master.get(self.summary_id).text
+
+    @property
     def banner_path(self):
         return self.assets.path / f'ondemand/gacha/top/banner/{self.id:>05}.png'
 
