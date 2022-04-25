@@ -22,8 +22,6 @@ class AssetManager:
         self.path = Path(path)
         self.masters: Dict[str, ma.MasterDict] = {}
         self.db = sqlite3.connect(':memory:')  # So sql queries can be executed on some properties
-        from d4dj_utils.master.achievement_master import AchievementMaster
-        self.achievement_master: ma.MasterDict[int, AchievementMaster] = self._load_master(AchievementMaster)
         from d4dj_utils.master.attribute_master import AttributeMaster
         self.attribute_master: ma.MasterDict[int, AttributeMaster] = self._load_master(AttributeMaster)
         from d4dj_utils.master.card_exp_master import CardExpMaster
