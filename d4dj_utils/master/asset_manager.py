@@ -120,7 +120,7 @@ class AssetManager:
         # What remains is the number of arguments to keep from the msgpack file itself.
         init_fn = getattr(cls, 'new', cls)
         sig = inspect.signature(init_fn)
-        argument_count = len(sig.parameters) - 2
+        argument_count = len(sig.parameters) - 1
         if any(param.kind == param.kind.VAR_POSITIONAL for param in sig.parameters.values()):
             argument_count = 999
         archive_values = {}
