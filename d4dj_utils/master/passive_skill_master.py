@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional
 
+from d4dj_utils.master.character_master import CharacterMaster
 from d4dj_utils.master.master_asset import MasterAsset
 
 
@@ -12,6 +13,7 @@ class PassiveSkillMaster(MasterAsset):
     min_value: float
     max_value: float
     sub_value: float
+    bonus_character_id: int
 
     def __hash__(self):
         return self.id.__hash__()
@@ -38,9 +40,13 @@ class PassiveSkillMaster(MasterAsset):
             'sub_value': self.sub_value,
         }
 
+    @property
+    def bonus_character(self) -> Optional[CharacterMaster]:
+        return self.assets.character_master.get(self.bonus_character_id)
+
     @classmethod
     def default(cls, assets):
-        return {0: cls(assets, 0, 0, 0.0, 0.0, 0.0)}
+        return {0: cls(assets, 0, 0, 0.0, 0.0, 0.0, 0)}
 
 
 class PassiveSkillType(Enum):
@@ -49,3 +55,5 @@ class PassiveSkillType(Enum):
     FeverSupport = 2
     ScoreUpWithDamage = 3
     AutoScoreUp = 4
+    SupportableScoreUp = 11
+    SupportableSkillLonger = 12

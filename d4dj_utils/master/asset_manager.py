@@ -118,7 +118,8 @@ class AssetManager:
         name = cls.__name__
         # -1 for self, and -1 for the asset_manager argument.
         # What remains is the number of arguments to keep from the msgpack file itself.
-        sig = inspect.signature(cls.__init__)
+        init_fn = getattr(cls, 'new', cls.__init__)
+        sig = inspect.signature(init_fn)
         argument_count = len(sig.parameters) - 2
         if any(param.kind == param.kind.VAR_POSITIONAL for param in sig.parameters.values()):
             argument_count = 999
@@ -146,10 +147,10 @@ class AssetManager:
         if self.drop_extra_fields:
             if len(next(iter(data.values()))) > argument_count:
                 self.logger.info(f'Dropping extra arguments from {name}.')
-            master_dict = ma.MasterDict({k: cls(self, *(v[:argument_count])) for k, v in data.items()}, name,
+            master_dict = ma.MasterDict({k: init_fn(self, *(v[:argument_count])) for k, v in data.items()}, name,
                                         asset_path)
         else:
-            master_dict = ma.MasterDict({k: cls(self, *v) for k, v in data.items()}, name, asset_path)
+            master_dict = ma.MasterDict({k: init_fn(self, *v) for k, v in data.items()}, name, asset_path)
         if archive_load_path:
             return master_dict
         archive_values.update(master_dict)

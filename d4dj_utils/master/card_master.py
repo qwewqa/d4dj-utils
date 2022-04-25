@@ -22,6 +22,7 @@ class CardMaster(MasterAsset):
     character_id: int
     skill_id: int
     skill_name: str
+    passive_skill_id: int
     max_parameters: Tuple[int]
     gacha_message: str
     cloth_card_id: int
@@ -30,8 +31,15 @@ class CardMaster(MasterAsset):
     head_x: Tuple[int]
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
-    passive_skill_id: int = 0
     gacha_card_attribute: int = 0
+
+    @classmethod
+    def new(cls, *args, **kwargs):
+        if isinstance(args[7], tuple):
+            args = [*args]
+            args.insert(7, args[-2])
+            del args[-2]
+        return cls(*args, **kwargs)
 
     def __hash__(self):
         return self.id.__hash__()

@@ -39,8 +39,6 @@ class MusicMaster(MasterAsset):
     purchase_bonus_ids: Tuple[int]
     is_hidden: bool
     exclude_challenge: bool
-    is_tutorial: bool
-    can_fair_use: bool
 
     def __hash__(self):
         return self.id.__hash__()
@@ -121,9 +119,7 @@ class MusicMaster(MasterAsset):
             # 'purchase_bonus'
             'is_hidden': self.is_hidden,
             'exclude_challenge': self.exclude_challenge,
-            'is_tutorial': self.is_tutorial,
             'mix_info': '(' + ', '.join(f'{k.name}: {v}' for k, v in self.mix_info.items()) + ')',
-            'can_fair_use': self.can_fair_use
         }
 
 
