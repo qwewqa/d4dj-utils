@@ -14,7 +14,7 @@ class GachaSummaryWordMaster(MasterAsset):
     @classmethod
     def default(cls, assets) -> Dict:
         return {
-            0: GachaSummaryWordMaster(id=0, text=""),
+            0: GachaSummaryWordMaster(assets, id=0, text=""),
         }
 
     @property
