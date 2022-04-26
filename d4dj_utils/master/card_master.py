@@ -35,9 +35,9 @@ class CardMaster(MasterAsset):
 
     @classmethod
     def new(cls, *args, **kwargs):
-        if isinstance(args[7], tuple):
+        if isinstance(args[8], tuple):
             args = [*args]
-            args.insert(7, args[-2])
+            args.insert(8, args[-2])
             del args[-2]
         return cls(*args, **kwargs)
 
