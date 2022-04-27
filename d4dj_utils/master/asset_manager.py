@@ -146,7 +146,7 @@ class AssetManager:
                 data = msgpack.loads(data, strict_map_key=False, use_list=False)
         except AttributeError:
             pass
-        if self.drop_extra_fields:
+        if self.drop_extra_fields and data:
             if len(next(iter(data.values()))) > argument_count:
                 self.logger.info(f'Dropping extra arguments from {name}.')
             master_dict = ma.MasterDict({k: init_fn(self, *(v[:argument_count])) for k, v in data.items()}, name,
