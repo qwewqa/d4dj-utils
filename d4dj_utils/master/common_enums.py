@@ -86,6 +86,7 @@ class RewardCategory(int, Enum):
 class GachaType(Enum):
     Normal = 0
     StepUp = 1
+    Audition = 2
 
 
 class GachaCategory(Enum):
