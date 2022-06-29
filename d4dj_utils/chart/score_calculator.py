@@ -110,7 +110,8 @@ ScoringDataType = NamedTuple('ScoringDataType', fever=bool, combo=bool)
 
 
 def get_chart_scoring_data(chart: Chart,
-                           skill_durations: Sequence[float]) -> ChartScoringData:
+                           skill_durations: Sequence[float],
+                           fever_multiplier: float = 1.0) -> ChartScoringData:
     tl = Timeline()
     tl.active_skill_index = -1
     tl.combo = 0
@@ -149,12 +150,12 @@ def get_chart_scoring_data(chart: Chart,
     tl.add(chart.info.fever_start, enable_fever_cb)
     tl.add(chart.info.fever_end, disable_fever_cb)
 
-    tl.fever_multiplier = 1.0
+    tl.fever_multiplier = fever_multiplier
     if n_fever_notes := sum(1 for n in chart.notes if chart.info.fever_start <= n.time < chart.info.fever_end):
         fever_note_fraction = n_fever_notes / len(chart.notes)
         fever_multiplier = (0.28 / fever_note_fraction) ** 0.6
         fever_multiplier = max(1.1, min(2 * fever_multiplier, 5.0))
-        tl.fever_multiplier = fever_multiplier
+        tl.fever_multiplier *= fever_multiplier
 
     def add_note_callback(note: NoteData):
         def note_cb(_tl):
