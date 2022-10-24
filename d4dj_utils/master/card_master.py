@@ -32,6 +32,7 @@ class CardMaster(MasterAsset):
     start_date: msgpack.Timestamp
     end_date: msgpack.Timestamp
     gacha_card_attribute: int = 0
+    can_use_common_card_stack_stock: bool = False
 
     @classmethod
     def new(cls, *args, **kwargs):
