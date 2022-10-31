@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 
 from d4dj_utils.master.master_asset import MasterAsset
 
@@ -14,6 +14,8 @@ class SkillMaster(MasterAsset):
     min_seconds: float = 0
     max_seconds: float = 0
     perfect_score_up_rate: int = 0
+    group_bonus_character_ids: Tuple[int, ...] = ()
+    group_bonus_rates: Tuple[int, ...] = ()
 
     def __hash__(self):
         return self.id.__hash__()
