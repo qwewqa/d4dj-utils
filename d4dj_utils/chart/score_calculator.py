@@ -2,9 +2,9 @@ import heapq
 import math
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Callable, List, Optional, Union, Sequence, NamedTuple, Dict
+from typing import Callable, List, Optional, Union, Sequence, NamedTuple, Dict, Tuple
 
-from d4dj_utils.chart.chart import NoteData, NoteType, Chart
+from d4dj_utils.chart.chart import NoteData, Chart
 from d4dj_utils.master.chart_master import ChartMaster
 from d4dj_utils.master.skill_master import SkillMaster
 
@@ -86,14 +86,16 @@ class ChartScoringData:
         total_score = 0
         for entry, count in data.items():
             score = entry.score * multiplier
-            if entry.skill != -1:
-                skill = skills[entry.skill]
+            if entry.skills:
+                active_skills = [skills[i] for i in entry.skills]
+                score_up_rate = sum(s.score_up_rate for s in active_skills)
+                perfect_score_up_rate = sum(s.perfect_score_up_rate for s in active_skills)
                 if autoplay:
-                    score = math.floor(score * (1 + skill.score_up_rate / 100))
+                    score = math.floor(score * (1 + score_up_rate / 100))
                 else:
-                    score = (accuracy * math.floor(score * (1 + skill.score_up_rate / 100 +
-                                                            skill.perfect_score_up_rate / 100)) +
-                             (1 - accuracy) * math.floor(0.9 * score * (1 + skill.score_up_rate / 100)))
+                    score = (accuracy * math.floor(score * (1 + score_up_rate / 100 +
+                                                            perfect_score_up_rate / 100)) +
+                             (1 - accuracy) * math.floor(0.9 * score * (1 + score_up_rate / 100)))
             else:
                 score = accuracy * math.floor(score) + (1 - accuracy) * math.floor(0.9 * score)
             total_score += score * count
@@ -105,15 +107,22 @@ disable_soflan_multiplier = 20 / 21
 combo_multipliers = ([1.0] * 20 + [1.01] * 30 + [1.02] * 50 + [1.03] * 50 + [1.04] * 50 + [1.05] * 50 +
                      [1.06] * 50 + [1.07] * 100 + [1.08] * 100 + [1.09] * 100 + [1.10] * 100 + [1.11])
 
-ScoringDataEntry = NamedTuple('ScoringDataEntry', score=float, skill=int)
-ScoringDataType = NamedTuple('ScoringDataType', fever=bool, combo=bool)
+
+class ScoringDataEntry(NamedTuple):
+    score: float
+    skills: Tuple[int, ...]
+
+
+class ScoringDataType(NamedTuple):
+    fever: bool
+    combo: bool
 
 
 def get_chart_scoring_data(chart: Chart,
                            skill_durations: Sequence[float],
                            fever_multiplier: float = 1.0) -> ChartScoringData:
     tl = Timeline()
-    tl.active_skill_index = -1
+    tl.active_skills = set()
     tl.combo = 0
     tl.fever_active = False
 
@@ -128,11 +137,10 @@ def get_chart_scoring_data(chart: Chart,
 
     def add_skill_callback(index: int, time: float):
         def start_cb(_tl):
-            tl.active_skill_index = index
+            tl.active_skills.add(index)
 
         def end_cb(_tl):
-            if tl.active_skill_index == index:
-                tl.active_skill_index = -1
+            tl.active_skills.remove(index)
 
         tl.add(time, start_cb)
         tl.add(time + skill_durations[index], end_cb)
@@ -163,16 +171,16 @@ def get_chart_scoring_data(chart: Chart,
             combo_multiplier = combo_multipliers[min(tl.combo, 700)]
             data[ScoringDataType(fever=True, combo=True)][
                 ScoringDataEntry(score=base_score * fever_multiplier * combo_multiplier,
-                                 skill=tl.active_skill_index)] += 1
+                                 skills=tuple(tl.active_skills))] += 1
             data[ScoringDataType(fever=True, combo=False)][
                 ScoringDataEntry(score=base_score * fever_multiplier,
-                                 skill=tl.active_skill_index)] += 1
+                                 skills=tuple(tl.active_skills))] += 1
             data[ScoringDataType(fever=False, combo=True)][
                 ScoringDataEntry(score=base_score * combo_multiplier,
-                                 skill=tl.active_skill_index)] += 1
+                                 skills=tuple(tl.active_skills))] += 1
             data[ScoringDataType(fever=False, combo=False)][
                 ScoringDataEntry(score=base_score,
-                                 skill=tl.active_skill_index)] += 1
+                                 skills=tuple(tl.active_skills))] += 1
             tl.combo += 1
 
         tl.add(note.time, note_cb)
