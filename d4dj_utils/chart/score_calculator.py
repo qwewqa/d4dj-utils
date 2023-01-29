@@ -90,7 +90,7 @@ class ChartScoringData:
         disable_soflan: bool = False,
         autoplay: bool = False,
         accuracy: float = 1.0,
-        combo_bonus_multiplier: float | bool = 1.0,
+        combo_bonus_multiplier: Union[float, bool] = 1.0,
     ) -> float:
         if autoplay:
             combo_bonus_multiplier = 0.0
