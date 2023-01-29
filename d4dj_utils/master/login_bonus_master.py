@@ -32,35 +32,42 @@ class LoginBonusMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'login_bonus_type': self.login_bonus_type,
-            'start_date': self.start_date,
+            "login_bonus_type": self.login_bonus_type,
+            "start_date": self.start_date,
         }
 
     @property
     def image_path(self):
-        return self.assets.path / f'ondemand/loginBonus/loginBonus_{str(self.id).zfill(4)}.jpg'
+        return (
+            self.assets.path
+            / f"ondemand/loginBonus/loginBonus_{str(self.id).zfill(4)}.jpg"
+        )
 
     @property
     def items(self):
         cur = self.assets.db.cursor()
-        return [self.assets.login_bonus_item_master[lbimid]
-                for lbimid in
-                cur.execute('SELECT login_bonus_id, sequence FROM LoginBonusItemMaster WHERE login_bonus_id=?', [self.id])]
+        return [
+            self.assets.login_bonus_item_master[lbimid]
+            for lbimid in cur.execute(
+                "SELECT login_bonus_id, sequence FROM LoginBonusItemMaster WHERE login_bonus_id=?",
+                [self.id],
+            )
+        ]
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'login_bonus_type': self.login_bonus_type,
-            'order': self.order,
-            'loop': self.loop,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'subscription_id': self.subscription_id,
-            'background_image': self.background_image,
-            'foreground_image': self.foreground_image,
-            'date_positions': self.date_positions,
-            'limit_days': self.limit_days,
-            'items': self.items,
+            "login_bonus_type": self.login_bonus_type,
+            "order": self.order,
+            "loop": self.loop,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "subscription_id": self.subscription_id,
+            "background_image": self.background_image,
+            "foreground_image": self.foreground_image,
+            "date_positions": self.date_positions,
+            "limit_days": self.limit_days,
+            "items": self.items,
         }
 
 

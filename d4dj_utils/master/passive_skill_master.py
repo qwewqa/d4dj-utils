@@ -25,19 +25,19 @@ class PassiveSkillMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'type': self.type,
-            'min_value': self.min_value,
-            'max_value': self.max_value,
-            'sub_value': self.sub_value,
+            "type": self.type,
+            "min_value": self.min_value,
+            "max_value": self.max_value,
+            "sub_value": self.sub_value,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'type': self.type,
-            'min_value': self.min_value,
-            'max_value': self.max_value,
-            'sub_value': self.sub_value,
+            "type": self.type,
+            "min_value": self.min_value,
+            "max_value": self.max_value,
+            "sub_value": self.sub_value,
         }
 
     @property

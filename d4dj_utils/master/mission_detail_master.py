@@ -34,19 +34,17 @@ class MissionDetailMaster(MasterAsset):
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {
-            'description': self.description
-        }
+        return {"description": self.description}
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'panel': self.panel,
-            'sequence': self.sequence,
-            'description': self.description,
-            'condition_id': self.condition_id,
-            'condition_values': self.condition_values,
-            'rewards': '[' + ', '.join(str(r) for r in self.rewards) + ']',
-            'command': self.command,
-            'home_priority': self.home_priority
+            "panel": self.panel,
+            "sequence": self.sequence,
+            "description": self.description,
+            "condition_id": self.condition_id,
+            "condition_values": self.condition_values,
+            "rewards": "[" + ", ".join(str(r) for r in self.rewards) + "]",
+            "command": self.command,
+            "home_priority": self.home_priority,
         }

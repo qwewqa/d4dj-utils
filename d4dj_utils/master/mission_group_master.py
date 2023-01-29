@@ -32,20 +32,20 @@ class MissionGroupMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'category': self.category.name,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime
+            "category": self.category.name,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'category': self.category.name,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'reset_type': self.reset_type.name,
-            'reset_value': self.reset_value,
-            'subscription_id': self.subscription_id
+            "category": self.category.name,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "reset_type": self.reset_type.name,
+            "reset_value": self.reset_value,
+            "subscription_id": self.subscription_id,
         }
 
 

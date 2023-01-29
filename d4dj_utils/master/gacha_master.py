@@ -12,10 +12,12 @@ from d4dj_utils.master.master_asset import MasterAsset
 
 class GachaMaster:
     def __new__(cls, *args, **kwargs):
-        if (isinstance(args[8], bool)
-                and isinstance(args[9], msgpack.Timestamp)
-                and isinstance(args[10], msgpack.Timestamp)
-                and isinstance(args[11], int)):
+        if (
+            isinstance(args[8], bool)
+            and isinstance(args[9], msgpack.Timestamp)
+            and isinstance(args[10], msgpack.Timestamp)
+            and isinstance(args[11], int)
+        ):
             return GachaMasterA(*args, **kwargs)
         elif isinstance(args[14], bool):
             return GachaMasterNew(*args, **kwargs)
@@ -73,14 +75,22 @@ class GachaMasterA(GachaMaster, MasterAsset):
 
     @property
     def table_rates(self):
-        return [self.assets.gacha_table_rate_master.get(rid) for rid in self.table_rate_ids]
+        return [
+            self.assets.gacha_table_rate_master.get(rid) for rid in self.table_rate_ids
+        ]
 
     @property
     def tables(self):
         cur = self.assets.db.cursor()
-        return [[self.assets.gacha_table_master[gtmid[0]]
-                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
-                for tid in self.table_ids]
+        return [
+            [
+                self.assets.gacha_table_master[gtmid[0]]
+                for gtmid in cur.execute(
+                    "SELECT id FROM GachaTableMaster WHERE table_id=?", [tid]
+                )
+            ]
+            for tid in self.table_ids
+        ]
 
     @property
     def pick_up_cards(self):
@@ -108,13 +118,20 @@ class GachaMasterA(GachaMaster, MasterAsset):
 
     @property
     def pick_up_duplicate_bonus_stock(self):
-        return [self.assets.stock_master[sid] for sid in self.pick_up_duplicate_bonus_stock_ids]
+        return [
+            self.assets.stock_master[sid]
+            for sid in self.pick_up_duplicate_bonus_stock_ids
+        ]
 
     @property
     def draw_data(self):
         cur = self.assets.db.cursor()
-        return [self.assets.gacha_draw_master[gdmid[0]]
-                for gdmid in cur.execute('SELECT id FROM GachaDrawMaster WHERE gacha_id=?', [self.id])]
+        return [
+            self.assets.gacha_draw_master[gdmid[0]]
+            for gdmid in cur.execute(
+                "SELECT id FROM GachaDrawMaster WHERE gacha_id=?", [self.id]
+            )
+        ]
 
     @property
     def event(self):
@@ -126,42 +143,42 @@ class GachaMasterA(GachaMaster, MasterAsset):
 
     @property
     def banner_path(self):
-        return self.assets.path / f'ondemand/gacha/top/banner/{self.id:>05}.png'
+        return self.assets.path / f"ondemand/gacha/top/banner/{self.id:>05}.png"
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'pick_up_cards': self.pick_up_cards,
+            "pick_up_cards": self.pick_up_cards,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'table_rates': self.table_rates,
-            'tables': self.tables,
-            'pick_up_cards': self.pick_up_cards,
-            'summary': self.summary,
-            'has_specific_bg': self.has_specific_bg,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'note': self.note,
-            'detail': self.detail,
-            'live_2d_bg': self.live_2d_bg,
-            'login_trigger_minutes': self.login_trigger_minutes,
-            'show_home_animation': self.show_home_animation,
-            'has_pick_up_duplicate_bonus': self.has_pick_up_duplicate_bonus,
-            'gacha_card_attribute_id': self.gacha_card_attribute_id,
-            'ascending_sort_id': self.ascending_sort_id,
-            'category': self.category,
-            'bonus_stock': self.bonus_stock,
-            'select_bonus_max_value': self.select_bonus_max_value,
-            'select_bonus_cards': self.select_bonus_cards,
-            'select_bonus_rewards': self.select_bonus_rewards,
-            'pick_up_duplicate_bonus_stock': self.pick_up_duplicate_bonus_stock,
-            'pick_up_duplicate_bonus_stock_amounts': self.pick_up_duplicate_bonus_stock_amounts,
-            'gacha_type': self.gacha_type,
-            'step_loop_count': self.step_loop_count,
-            'draw_data': self.draw_data,
+            "table_rates": self.table_rates,
+            "tables": self.tables,
+            "pick_up_cards": self.pick_up_cards,
+            "summary": self.summary,
+            "has_specific_bg": self.has_specific_bg,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "note": self.note,
+            "detail": self.detail,
+            "live_2d_bg": self.live_2d_bg,
+            "login_trigger_minutes": self.login_trigger_minutes,
+            "show_home_animation": self.show_home_animation,
+            "has_pick_up_duplicate_bonus": self.has_pick_up_duplicate_bonus,
+            "gacha_card_attribute_id": self.gacha_card_attribute_id,
+            "ascending_sort_id": self.ascending_sort_id,
+            "category": self.category,
+            "bonus_stock": self.bonus_stock,
+            "select_bonus_max_value": self.select_bonus_max_value,
+            "select_bonus_cards": self.select_bonus_cards,
+            "select_bonus_rewards": self.select_bonus_rewards,
+            "pick_up_duplicate_bonus_stock": self.pick_up_duplicate_bonus_stock,
+            "pick_up_duplicate_bonus_stock_amounts": self.pick_up_duplicate_bonus_stock_amounts,
+            "gacha_type": self.gacha_type,
+            "step_loop_count": self.step_loop_count,
+            "draw_data": self.draw_data,
         }
 
 
@@ -217,14 +234,22 @@ class GachaMasterNew(GachaMaster, MasterAsset):
 
     @property
     def table_rates(self):
-        return [self.assets.gacha_table_rate_master.get(rid) for rid in self.table_rate_ids]
+        return [
+            self.assets.gacha_table_rate_master.get(rid) for rid in self.table_rate_ids
+        ]
 
     @property
     def tables(self):
         cur = self.assets.db.cursor()
-        return [[self.assets.gacha_table_master[gtmid[0]]
-                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
-                for tid in self.table_ids]
+        return [
+            [
+                self.assets.gacha_table_master[gtmid[0]]
+                for gtmid in cur.execute(
+                    "SELECT id FROM GachaTableMaster WHERE table_id=?", [tid]
+                )
+            ]
+            for tid in self.table_ids
+        ]
 
     @property
     def pick_up_cards(self):
@@ -252,13 +277,20 @@ class GachaMasterNew(GachaMaster, MasterAsset):
 
     @property
     def pick_up_duplicate_bonus_stock(self):
-        return [self.assets.stock_master[sid] for sid in self.pick_up_duplicate_bonus_stock_ids]
+        return [
+            self.assets.stock_master[sid]
+            for sid in self.pick_up_duplicate_bonus_stock_ids
+        ]
 
     @property
     def draw_data(self):
         cur = self.assets.db.cursor()
-        return [self.assets.gacha_draw_master[gdmid[0]]
-                for gdmid in cur.execute('SELECT id FROM GachaDrawMaster WHERE gacha_id=?', [self.id])]
+        return [
+            self.assets.gacha_draw_master[gdmid[0]]
+            for gdmid in cur.execute(
+                "SELECT id FROM GachaDrawMaster WHERE gacha_id=?", [self.id]
+            )
+        ]
 
     @property
     def event(self):
@@ -266,42 +298,42 @@ class GachaMasterNew(GachaMaster, MasterAsset):
 
     @property
     def banner_path(self):
-        return self.assets.path / f'ondemand/gacha/top/banner/{self.id:>05}.png'
+        return self.assets.path / f"ondemand/gacha/top/banner/{self.id:>05}.png"
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'pick_up_cards': self.pick_up_cards,
+            "pick_up_cards": self.pick_up_cards,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'table_rates': self.table_rates,
-            'tables': self.tables,
-            'pick_up_cards': self.pick_up_cards,
-            'summary': self.summary,
-            'has_specific_bg': self.has_specific_bg,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'note': self.note,
-            'detail': self.detail,
-            'live_2d_bg': self.live_2d_bg,
-            'login_trigger_minutes': self.login_trigger_minutes,
-            'show_home_animation': self.show_home_animation,
-            'has_pick_up_duplicate_bonus': self.has_pick_up_duplicate_bonus,
-            'gacha_card_attribute_id': self.gacha_card_attribute_id,
-            'ascending_sort_id': self.ascending_sort_id,
-            'category': self.category,
-            'bonus_stock': self.bonus_stock,
-            'select_bonus_max_value': self.select_bonus_max_value,
-            'select_bonus_cards': self.select_bonus_cards,
-            'select_bonus_rewards': self.select_bonus_rewards,
-            'pick_up_duplicate_bonus_stock': self.pick_up_duplicate_bonus_stock,
-            'pick_up_duplicate_bonus_stock_amounts': self.pick_up_duplicate_bonus_stock_amounts,
-            'gacha_type': self.gacha_type,
-            'step_loop_count': self.step_loop_count,
-            'draw_data': self.draw_data,
+            "table_rates": self.table_rates,
+            "tables": self.tables,
+            "pick_up_cards": self.pick_up_cards,
+            "summary": self.summary,
+            "has_specific_bg": self.has_specific_bg,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "note": self.note,
+            "detail": self.detail,
+            "live_2d_bg": self.live_2d_bg,
+            "login_trigger_minutes": self.login_trigger_minutes,
+            "show_home_animation": self.show_home_animation,
+            "has_pick_up_duplicate_bonus": self.has_pick_up_duplicate_bonus,
+            "gacha_card_attribute_id": self.gacha_card_attribute_id,
+            "ascending_sort_id": self.ascending_sort_id,
+            "category": self.category,
+            "bonus_stock": self.bonus_stock,
+            "select_bonus_max_value": self.select_bonus_max_value,
+            "select_bonus_cards": self.select_bonus_cards,
+            "select_bonus_rewards": self.select_bonus_rewards,
+            "pick_up_duplicate_bonus_stock": self.pick_up_duplicate_bonus_stock,
+            "pick_up_duplicate_bonus_stock_amounts": self.pick_up_duplicate_bonus_stock_amounts,
+            "gacha_type": self.gacha_type,
+            "step_loop_count": self.step_loop_count,
+            "draw_data": self.draw_data,
         }
 
 
@@ -330,15 +362,23 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
     gacha_type_id: int
     bonus_stock_id: int
     bonus_selectable_cards_max_value: int = 0
-    bonus_selectable_card_ids: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
-    select_bonus_reward_ids: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
-    pick_up_duplicate_bonus_stock_ids: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
-    pick_up_duplicate_bonus_stock_amounts: Tuple[int, ...] = dataclasses.field(default_factory=lambda: [])
+    bonus_selectable_card_ids: Tuple[int, ...] = dataclasses.field(
+        default_factory=lambda: []
+    )
+    select_bonus_reward_ids: Tuple[int, ...] = dataclasses.field(
+        default_factory=lambda: []
+    )
+    pick_up_duplicate_bonus_stock_ids: Tuple[int, ...] = dataclasses.field(
+        default_factory=lambda: []
+    )
+    pick_up_duplicate_bonus_stock_amounts: Tuple[int, ...] = dataclasses.field(
+        default_factory=lambda: []
+    )
     sub_bonus_max_value: int = 0
     sub_bonus_table_rate_id: int = 0
     sub_bonus_table_ids: Tuple[int, ...] = ()
-    main_bonus_frame_text: str = ''
-    sub_bonus_frame_text: str = ''
+    main_bonus_frame_text: str = ""
+    sub_bonus_frame_text: str = ""
 
     def __new__(cls, *args, **kwargs):
         return object.__new__(cls)
@@ -376,14 +416,22 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
 
     @property
     def table_rates(self):
-        return [self.assets.gacha_table_rate_master.get(rid) for rid in self.table_rate_ids]
+        return [
+            self.assets.gacha_table_rate_master.get(rid) for rid in self.table_rate_ids
+        ]
 
     @property
     def tables(self):
         cur = self.assets.db.cursor()
-        return [[self.assets.gacha_table_master[gtmid[0]]
-                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
-                for tid in self.table_ids]
+        return [
+            [
+                self.assets.gacha_table_master[gtmid[0]]
+                for gtmid in cur.execute(
+                    "SELECT id FROM GachaTableMaster WHERE table_id=?", [tid]
+                )
+            ]
+            for tid in self.table_ids
+        ]
 
     @property
     def pick_up_cards(self):
@@ -396,9 +444,15 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
     @property
     def bonus_tables(self):
         cur = self.assets.db.cursor()
-        return [[self.assets.gacha_table_master[gtmid[0]]
-                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
-                for tid in self.bonus_table_ids]
+        return [
+            [
+                self.assets.gacha_table_master[gtmid[0]]
+                for gtmid in cur.execute(
+                    "SELECT id FROM GachaTableMaster WHERE table_id=?", [tid]
+                )
+            ]
+            for tid in self.bonus_table_ids
+        ]
 
     @property
     def sub_bonus_table_rate(self):
@@ -407,9 +461,15 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
     @property
     def sub_bonus_tables(self):
         cur = self.assets.db.cursor()
-        return [[self.assets.gacha_table_master[gtmid[0]]
-                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
-                for tid in self.sub_bonus_table_ids]
+        return [
+            [
+                self.assets.gacha_table_master[gtmid[0]]
+                for gtmid in cur.execute(
+                    "SELECT id FROM GachaTableMaster WHERE table_id=?", [tid]
+                )
+            ]
+            for tid in self.sub_bonus_table_ids
+        ]
 
     @property
     def gacha_type(self):
@@ -437,13 +497,20 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
 
     @property
     def pick_up_duplicate_bonus_stock(self):
-        return [self.assets.stock_master[sid] for sid in self.pick_up_duplicate_bonus_stock_ids]
+        return [
+            self.assets.stock_master[sid]
+            for sid in self.pick_up_duplicate_bonus_stock_ids
+        ]
 
     @property
     def draw_data(self):
         cur = self.assets.db.cursor()
-        return [self.assets.gacha_draw_master[gdmid[0]]
-                for gdmid in cur.execute('SELECT id FROM GachaDrawMaster WHERE gacha_id=?', [self.id])]
+        return [
+            self.assets.gacha_draw_master[gdmid[0]]
+            for gdmid in cur.execute(
+                "SELECT id FROM GachaDrawMaster WHERE gacha_id=?", [self.id]
+            )
+        ]
 
     @property
     def event(self):
@@ -451,48 +518,48 @@ class GachaMasterLegacy(GachaMaster, MasterAsset):
 
     @property
     def banner_path(self):
-        return self.assets.path / f'ondemand/gacha/top/banner/{self.id:>05}.png'
+        return self.assets.path / f"ondemand/gacha/top/banner/{self.id:>05}.png"
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'pick_up_cards': self.pick_up_cards,
+            "pick_up_cards": self.pick_up_cards,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'table_rates': self.table_rates,
-            'tables': self.tables,
-            'pick_up_cards': self.pick_up_cards,
-            'summary': self.summary,
-            'has_specific_bg': self.has_specific_bg,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'note': self.note,
-            'detail': self.detail,
-            'live_2d_bg': self.live_2d_bg,
-            'bonus_max_value': self.bonus_max_value,
-            'bonus_table_rate': self.bonus_table_rate,
-            'bonus_tables': self.bonus_tables,
-            'login_trigger_minutes': self.login_trigger_minutes,
-            'show_home_animation': self.show_home_animation,
-            'has_pick_up_duplicate_bonus': self.has_pick_up_duplicate_bonus,
-            'is_tutorial': self.is_tutorial,
-            'ascending_sort_id': self.ascending_sort_id,
-            'category': self.category,
-            'bonus_stock': self.bonus_stock,
-            'bonus_selectable_cards_max_value': self.bonus_selectable_cards_max_value,
-            'bonus_selectable_cards': self.bonus_selectable_cards,
-            'select_bonus_reward_ids': self.select_bonus_reward_ids,
-            'pick_up_duplicate_bonus_stock': self.pick_up_duplicate_bonus_stock,
-            'pick_up_duplicate_bonus_stock_amounts': self.pick_up_duplicate_bonus_stock_amounts,
-            'draw_data': self.draw_data,
-            'sub_bonus_max_value': self.sub_bonus_max_value,
-            'sub_bonus_table_rate': self.sub_bonus_table_rate,
-            'sub_bonus_tables': self.sub_bonus_tables,
-            'main_bonus_frame_text': self.main_bonus_frame_text,
-            'sub_bonus_frame_text': self.sub_bonus_frame_text,
+            "table_rates": self.table_rates,
+            "tables": self.tables,
+            "pick_up_cards": self.pick_up_cards,
+            "summary": self.summary,
+            "has_specific_bg": self.has_specific_bg,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "note": self.note,
+            "detail": self.detail,
+            "live_2d_bg": self.live_2d_bg,
+            "bonus_max_value": self.bonus_max_value,
+            "bonus_table_rate": self.bonus_table_rate,
+            "bonus_tables": self.bonus_tables,
+            "login_trigger_minutes": self.login_trigger_minutes,
+            "show_home_animation": self.show_home_animation,
+            "has_pick_up_duplicate_bonus": self.has_pick_up_duplicate_bonus,
+            "is_tutorial": self.is_tutorial,
+            "ascending_sort_id": self.ascending_sort_id,
+            "category": self.category,
+            "bonus_stock": self.bonus_stock,
+            "bonus_selectable_cards_max_value": self.bonus_selectable_cards_max_value,
+            "bonus_selectable_cards": self.bonus_selectable_cards,
+            "select_bonus_reward_ids": self.select_bonus_reward_ids,
+            "pick_up_duplicate_bonus_stock": self.pick_up_duplicate_bonus_stock,
+            "pick_up_duplicate_bonus_stock_amounts": self.pick_up_duplicate_bonus_stock_amounts,
+            "draw_data": self.draw_data,
+            "sub_bonus_max_value": self.sub_bonus_max_value,
+            "sub_bonus_table_rate": self.sub_bonus_table_rate,
+            "sub_bonus_tables": self.sub_bonus_tables,
+            "main_bonus_frame_text": self.main_bonus_frame_text,
+            "sub_bonus_frame_text": self.sub_bonus_frame_text,
         }
 
 

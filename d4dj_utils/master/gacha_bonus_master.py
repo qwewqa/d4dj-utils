@@ -32,26 +32,32 @@ class GachaBonusMaster(MasterAsset):
     @property
     def tables(self):
         cur = self.assets.db.cursor()
-        return [[self.assets.gacha_table_master[gtmid[0]]
-                 for gtmid in cur.execute('SELECT id FROM GachaTableMaster WHERE table_id=?', [tid])]
-                for tid in self.table_ids]
+        return [
+            [
+                self.assets.gacha_table_master[gtmid[0]]
+                for gtmid in cur.execute(
+                    "SELECT id FROM GachaTableMaster WHERE table_id=?", [tid]
+                )
+            ]
+            for tid in self.table_ids
+        ]
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'gacha': self.gacha,
-            'is_main': self.is_main,
+            "gacha": self.gacha,
+            "is_main": self.is_main,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'gacha': self.gacha,
-            'is_main': self.gacha,
-            'max_value': self.max_value,
-            'table_rate': self.table_rate,
-            'tables': self.tables,
-            'text': self.text,
+            "gacha": self.gacha,
+            "is_main": self.gacha,
+            "max_value": self.max_value,
+            "table_rate": self.table_rate,
+            "tables": self.tables,
+            "text": self.text,
         }
 
     @classmethod

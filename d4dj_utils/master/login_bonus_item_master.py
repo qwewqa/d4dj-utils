@@ -14,7 +14,7 @@ class LoginBonusItemMaster(MasterAsset):
     reward_ids: Sequence[int]
     positions: Sequence[int]
 
-    db_fields = ['login_bonus_id', 'sequence']
+    db_fields = ["login_bonus_id", "sequence"]
 
     def __hash__(self):
         return self.id.__hash__()
@@ -33,21 +33,21 @@ class LoginBonusItemMaster(MasterAsset):
 
     @property
     def name_description(self) -> str:
-        return f'({self.login_bonus_id}, {self.sequence})'
+        return f"({self.login_bonus_id}, {self.sequence})"
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'rewards': self.rewards,
+            "rewards": self.rewards,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'login_bonus': self.login_bonus,
-            'sequence': self.sequence,
-            'rewards': self.rewards,
-            'positions': self.positions,
+            "login_bonus": self.login_bonus,
+            "sequence": self.sequence,
+            "rewards": self.rewards,
+            "positions": self.positions,
         }
 
 

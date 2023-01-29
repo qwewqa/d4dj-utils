@@ -44,7 +44,7 @@ class MusicMaster(MasterAsset):
         return self.id.__hash__()
 
     @property
-    def category(self) -> 'MusicCategory':
+    def category(self) -> "MusicCategory":
         return MusicCategory(self.category_id)
 
     @property
@@ -58,7 +58,11 @@ class MusicMaster(MasterAsset):
     @property
     def charts(self):
         charts = self.assets.chart_master
-        return {ChartDifficulty(d): charts[self.id * 10 + d] for d in range(1, 5) if (self.id * 10 + d) in charts}
+        return {
+            ChartDifficulty(d): charts[self.id * 10 + d]
+            for d in range(1, 5)
+            if (self.id * 10 + d) in charts
+        }
 
     @property
     def chart_levels(self):
@@ -66,18 +70,24 @@ class MusicMaster(MasterAsset):
 
     @property
     def jacket_path(self):
-        return self.assets.path / f'music_jacket/music_jacket_{str(self.id).zfill(7)}.jpg'
+        return (
+            self.assets.path / f"music_jacket/music_jacket_{str(self.id).zfill(7)}.jpg"
+        )
 
     @property
     def audio_path(self):
-        return self.assets.path / f'plain/music/music_{str(self.id).zfill(7)}.acb'
+        return self.assets.path / f"plain/music/music_{str(self.id).zfill(7)}.acb"
 
     @cached_property
     def duration(self) -> Optional[float]:
         try:
-            with open(self.audio_path.with_name(self.audio_path.name + '.json'), 'r', encoding='utf-8') as f:
+            with open(
+                self.audio_path.with_name(self.audio_path.name + ".json"),
+                "r",
+                encoding="utf-8",
+            ) as f:
                 audio_data = json.load(f)
-                return audio_data['sampleCount'] / audio_data['sampleRate']
+                return audio_data["sampleCount"] / audio_data["sampleRate"]
         except:
             return None
 
@@ -88,38 +98,43 @@ class MusicMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'category': self.category.name,
-            'unit': self.unit,
-            'chart_levels': self.chart_levels,
+            "category": self.category.name,
+            "unit": self.unit,
+            "chart_levels": self.chart_levels,
         }
 
     @property
     def mix_info(self):
-        return {ChartSectionType(section): self.assets.music_mix_master[(self.id, section)] for section in range(1, 4)
-                if (self.id, section) in self.assets.music_mix_master}
+        return {
+            ChartSectionType(section): self.assets.music_mix_master[(self.id, section)]
+            for section in range(1, 4)
+            if (self.id, section) in self.assets.music_mix_master
+        }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'read_name': self.read_name,
-            'lyricist': self.lyricist,
-            'composer': self.composer,
-            'arranger': self.arranger,
-            'special_unit_name': self.special_unit_name,
-            'category': self.category.name,
-            'unit': self.unit,
-            'chart_levels': self.chart_levels,
-            'default_order': self.default_order,
-            'bpm': self.bpm,
-            'open_key': self.open_key,
-            'section_trend': self.section_trend.name,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'has_movie': self.has_movie,
+            "read_name": self.read_name,
+            "lyricist": self.lyricist,
+            "composer": self.composer,
+            "arranger": self.arranger,
+            "special_unit_name": self.special_unit_name,
+            "category": self.category.name,
+            "unit": self.unit,
+            "chart_levels": self.chart_levels,
+            "default_order": self.default_order,
+            "bpm": self.bpm,
+            "open_key": self.open_key,
+            "section_trend": self.section_trend.name,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "has_movie": self.has_movie,
             # 'purchase_bonus'
-            'is_hidden': self.is_hidden,
-            'exclude_challenge': self.exclude_challenge,
-            'mix_info': '(' + ', '.join(f'{k.name}: {v}' for k, v in self.mix_info.items()) + ')',
+            "is_hidden": self.is_hidden,
+            "exclude_challenge": self.exclude_challenge,
+            "mix_info": "("
+            + ", ".join(f"{k.name}: {v}" for k, v in self.mix_info.items())
+            + ")",
         }
 
 

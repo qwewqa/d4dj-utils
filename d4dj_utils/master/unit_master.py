@@ -20,19 +20,23 @@ class UnitMaster(MasterAsset):
 
     @property
     def init_deck_characters(self):
-        return [self.assets.character_master[cid] for cid in self.init_deck_character_ids]
+        return [
+            self.assets.character_master[cid] for cid in self.init_deck_character_ids
+        ]
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {'short_name': self.short_name or "none"}
+        return {"short_name": self.short_name or "none"}
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'can_training': self.can_training,
-            'summary': self.summary,
-            'main_color_code': self.main_color_code,
-            'sub_color_code': self.sub_color_code,
-            'short_name': self.short_name,
-            'init_deck_characters': '[' + ', '.join(str(c) for c in self.init_deck_characters) + ']'
+            "can_training": self.can_training,
+            "summary": self.summary,
+            "main_color_code": self.main_color_code,
+            "sub_color_code": self.sub_color_code,
+            "short_name": self.short_name,
+            "init_deck_characters": "["
+            + ", ".join(str(c) for c in self.init_deck_characters)
+            + "]",
         }

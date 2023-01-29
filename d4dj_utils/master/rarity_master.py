@@ -26,16 +26,16 @@ class RarityMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'max_level': self.max_level,
-            'total_limit_break_bonus': self.total_limit_break_bonus
+            "max_level": self.max_level,
+            "total_limit_break_bonus": self.total_limit_break_bonus,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'max_levels': self.max_levels,
-            'max_level_parameter_rates': self.max_level_parameter_rates,
-            'limit_break_bonuses': self.limit_break_bonuses,
-            'total_limit_break_bonus': self.total_limit_break_bonus,
-            'seal_amount': self.seal_amount
+            "max_levels": self.max_levels,
+            "max_level_parameter_rates": self.max_level_parameter_rates,
+            "limit_break_bonuses": self.limit_break_bonuses,
+            "total_limit_break_bonus": self.total_limit_break_bonus,
+            "seal_amount": self.seal_amount,
         }

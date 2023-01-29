@@ -15,22 +15,16 @@ class ConditionMaster(MasterAsset):
         return self.id.__hash__()
 
     @property
-    def category(self) -> 'ConditionCategory':
+    def category(self) -> "ConditionCategory":
         return ConditionCategory(self.category_id)
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {
-            'category': self.category.name,
-            'value': self.value
-        }
+        return {"category": self.category.name, "value": self.value}
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
-        return {
-            'category': self.category.name,
-            'value': self.value
-        }
+        return {"category": self.category.name, "value": self.value}
 
 
 class ConditionCategory(Enum):

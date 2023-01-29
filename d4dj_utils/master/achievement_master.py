@@ -43,23 +43,25 @@ class AchievementMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'description': self.description,
-            'is_hidden': self.is_hidden,
+            "description": self.description,
+            "is_hidden": self.is_hidden,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'group': self.group_id,
-            'sequence': self.sequence,
-            'description': self.description,
-            'condition': self.condition_id,
-            'condition_values': '[' + ', '.join(str(v) for v in self.condition_values) + ']',
-            'rewards': '[' + ', '.join(str(r) for r in self.rewards) + ']',
-            'command': self.command,
-            'event_type': self.event_type.name,
-            'is_hidden': self.is_hidden,
-            'notify_type': self.notify_type.name
+            "group": self.group_id,
+            "sequence": self.sequence,
+            "description": self.description,
+            "condition": self.condition_id,
+            "condition_values": "["
+            + ", ".join(str(v) for v in self.condition_values)
+            + "]",
+            "rewards": "[" + ", ".join(str(r) for r in self.rewards) + "]",
+            "command": self.command,
+            "event_type": self.event_type.name,
+            "is_hidden": self.is_hidden,
+            "notify_type": self.notify_type.name,
         }
 
 

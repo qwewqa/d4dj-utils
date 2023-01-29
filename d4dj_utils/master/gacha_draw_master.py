@@ -16,7 +16,7 @@ class GachaDrawMaster(MasterAsset):
     roulette_targets_id: Tuple[int, ...] = ()
     roulette_rates: Tuple[int, ...] = ()
 
-    db_fields = ['id', 'gacha_id']
+    db_fields = ["id", "gacha_id"]
 
     def __hash__(self):
         return self.id.__hash__()
@@ -31,23 +31,25 @@ class GachaDrawMaster(MasterAsset):
 
     @property
     def roulette_targets(self):
-        return [self.assets.gacha_roulette_master[rid] for rid in self.roulette_targets_id]
+        return [
+            self.assets.gacha_roulette_master[rid] for rid in self.roulette_targets_id
+        ]
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'gacha': self.gacha,
+            "gacha": self.gacha,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'gacha': self.gacha,
-            'draw_amounts': self.draw_amounts,
-            'stock': self.stock,
-            'stock_amount': self.stock_amount,
-            'draw_limit': self.draw_limit,
-            'is_reset_limit_every_day': self.is_reset_limit_every_day,
-            'roulette_targets': self.roulette_targets,
-            'roulette_rates': self.roulette_rates,
+            "gacha": self.gacha,
+            "draw_amounts": self.draw_amounts,
+            "stock": self.stock,
+            "stock_amount": self.stock_amount,
+            "draw_limit": self.draw_limit,
+            "is_reset_limit_every_day": self.is_reset_limit_every_day,
+            "roulette_targets": self.roulette_targets,
+            "roulette_rates": self.roulette_rates,
         }

@@ -27,16 +27,18 @@ class MissionPanelMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'group': self.group,
-            'banner_group': self.banner_group,
-            'step': self.step
+            "group": self.group,
+            "banner_group": self.banner_group,
+            "step": self.step,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'group': self.group,
-            'banner_group': self.banner_group,
-            'step': self.step,
-            'all_complete_rewards': '[' + ', '.join(str(r) for r in self.all_complete_rewards) + ']'
+            "group": self.group,
+            "banner_group": self.banner_group,
+            "step": self.step,
+            "all_complete_rewards": "["
+            + ", ".join(str(r) for r in self.all_complete_rewards)
+            + "]",
         }

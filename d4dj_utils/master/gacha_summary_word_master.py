@@ -3,6 +3,7 @@ from typing import Dict, Any
 
 from d4dj_utils.master.master_asset import MasterAsset
 
+
 @dataclass
 class GachaSummaryWordMaster(MasterAsset):
     id: int
@@ -19,8 +20,8 @@ class GachaSummaryWordMaster(MasterAsset):
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {'text': self.text}
+        return {"text": self.text}
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
-        return {'text': self.text}
+        return {"text": self.text}

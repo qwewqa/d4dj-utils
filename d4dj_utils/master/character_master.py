@@ -24,24 +24,24 @@ class CharacterMaster(MasterAsset):
 
     @property
     def name_description(self) -> str:
-        return f'{self.full_name} ({self.id})'
+        return f"{self.full_name} ({self.id})"
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'full_name_english': self.full_name_english,
-            'unit': self.unit,
-            'color_code': self.color_code
+            "full_name_english": self.full_name_english,
+            "unit": self.unit,
+            "color_code": self.color_code,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'first_name': self.first_name,
-            'full_name': self.full_name,
-            'first_name_english': self.first_name_english,
-            'full_name_english': self.full_name_english,
-            'unit': self.unit,
-            'color_code': self.color_code,
-            'profile_answers': self.profile_answers
+            "first_name": self.first_name,
+            "full_name": self.full_name,
+            "first_name_english": self.first_name_english,
+            "full_name_english": self.full_name_english,
+            "unit": self.unit,
+            "color_code": self.color_code,
+            "profile_answers": self.profile_answers,
         }

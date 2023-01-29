@@ -18,9 +18,8 @@ class CardExpMaster(MasterAsset):
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {'total_exp': self.total_exp}
+        return {"total_exp": self.total_exp}
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
-        return {'total_exp': self.total_exp}
-
+        return {"total_exp": self.total_exp}

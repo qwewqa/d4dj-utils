@@ -18,7 +18,7 @@ except (ImportError, ModuleNotFoundError):
 
 @dataclasses.dataclass
 class MasterAsset(abc.ABC):
-    asset_manager: 'dataclasses.InitVar[am.AssetManager]'
+    asset_manager: "dataclasses.InitVar[am.AssetManager]"
     db_fields = {}
 
     def __post_init__(self, asset_manager):
@@ -26,29 +26,31 @@ class MasterAsset(abc.ABC):
 
     def __str__(self):
         if self.one_line_description_items:
-            return f'{self.name_description} ({self.one_line_description()})'
+            return f"{self.name_description} ({self.one_line_description()})"
         else:
             return self.name_description
 
     @property
     def name_description(self) -> str:
-        if hasattr(self, 'id'):
-            if hasattr(self, 'name'):
-                return f'{self.name} ({self.id})'
-            elif hasattr(self, 'title'):
-                return f'{self.title} ({self.id})'
+        if hasattr(self, "id"):
+            if hasattr(self, "name"):
+                return f"{self.name} ({self.id})"
+            elif hasattr(self, "title"):
+                return f"{self.title} ({self.id})"
             else:
-                return f'{self.id}'
+                return f"{self.id}"
         raise NotImplementedError
 
     def one_line_description(self):
         def format_desc(desc):
             if isinstance(desc, (tuple, list)):
-                return '[' + ', '.join(str(v) for v in desc) + ']'
+                return "[" + ", ".join(str(v) for v in desc) + "]"
             else:
                 return str(desc)
 
-        return ', '.join(f'{k}: {format_desc(v)}' for k, v in self.one_line_description_items.items())
+        return ", ".join(
+            f"{k}: {format_desc(v)}" for k, v in self.one_line_description_items.items()
+        )
 
     def extended_description(self) -> str:
         def gen_lines():
@@ -61,12 +63,12 @@ class MasterAsset(abc.ABC):
                         yield f'{key}: [{", ".join(str(item) for item in desc)}]'
                 else:
                     desc = str(desc)
-                    if '\n' in desc:
+                    if "\n" in desc:
                         yield f'{key}:\n{textwrap.indent(desc, "   |")}'
                     else:
-                        yield f'{key}: {desc}'
+                        yield f"{key}: {desc}"
 
-        return '\n'.join(gen_lines())
+        return "\n".join(gen_lines())
 
     @property
     @abc.abstractmethod
@@ -80,28 +82,39 @@ class MasterAsset(abc.ABC):
 
     @property
     def is_released(self):
-        return self.start_datetime is None or self.start_datetime < datetime.datetime.now(datetime.timezone.utc)
+        return (
+            self.start_datetime is None
+            or self.start_datetime < datetime.datetime.now(datetime.timezone.utc)
+        )
 
     @property
     def is_available(self):
-        return self.start_datetime is None or self.start_datetime < datetime.datetime.now(
-            datetime.timezone.utc) < self.end_datetime
+        return (
+            self.start_datetime is None
+            or self.start_datetime
+            < datetime.datetime.now(datetime.timezone.utc)
+            < self.end_datetime
+        )
 
     def convert_timestamp(self, timestamp: msgpack.Timestamp):
         try:
-            return self.assets.timezone.localize(timestamp.to_datetime().replace(tzinfo=None))
+            return self.assets.timezone.localize(
+                timestamp.to_datetime().replace(tzinfo=None)
+            )
         except OverflowError:
             return self.assets.timezone.localize(datetime.datetime.fromtimestamp(0))
 
     @property
     def start_datetime(self) -> Optional[datetime.datetime]:
-        if hasattr(self, 'start_date') and isinstance(self.start_date, msgpack.Timestamp):
+        if hasattr(self, "start_date") and isinstance(
+            self.start_date, msgpack.Timestamp
+        ):
             return self.convert_timestamp(self.start_date)
         return None
 
     @property
     def end_datetime(self) -> Optional[datetime.datetime]:
-        if hasattr(self, 'end_date') and isinstance(self.end_date, msgpack.Timestamp):
+        if hasattr(self, "end_date") and isinstance(self.end_date, msgpack.Timestamp):
             return self.convert_timestamp(self.end_date)
         return None
 
@@ -113,8 +126,8 @@ class MasterAsset(abc.ABC):
         raise NotImplementedError
 
 
-KT = TypeVar('KT')
-VT = TypeVar('VT', bound=MasterAsset)
+KT = TypeVar("KT")
+VT = TypeVar("VT", bound=MasterAsset)
 
 
 class MasterDict(dict, MutableMapping[KT, VT]):
@@ -133,10 +146,13 @@ class MasterDict(dict, MutableMapping[KT, VT]):
         if sort_key:
             values = sorted(values, key=sort_key)
 
-        return '\n'.join(f'{v.name_description}:\n{textwrap.indent(v.extended_description(), "    ")}' for v in values)
+        return "\n".join(
+            f'{v.name_description}:\n{textwrap.indent(v.extended_description(), "    ")}'
+            for v in values
+        )
 
     def save(self, encrypt=True):
-        with self.path.open('wb+') as f:
+        with self.path.open("wb+") as f:
             msgpack.dump({k: v.as_tuple() for k, v in self.items()}, f)
         if encrypt:
             tools.encrypt_asset(self.path)

@@ -26,48 +26,48 @@ class EventSpecificBonusMaster(MasterAsset):
         return self.assets.attribute_master.get(self.attribute_id)
 
     @property
-    def character_match_parameter_bonus(self) -> 'ParameterBonus':
+    def character_match_parameter_bonus(self) -> "ParameterBonus":
         return None
         return ParameterBonus(self.character_match_parameter_bonus_id)
 
     @property
-    def attribute_match_parameter_bonus(self) -> 'ParameterBonus':
+    def attribute_match_parameter_bonus(self) -> "ParameterBonus":
         return None
         return ParameterBonus(self.attribute_match_parameter_bonus_id)
 
     @property
-    def all_match_parameter_bonus(self) -> 'ParameterBonus':
+    def all_match_parameter_bonus(self) -> "ParameterBonus":
         return None
         return ParameterBonus(self.all_match_parameter_bonus_id)
 
     @property
-    def event_point_parameter_bonus(self) -> 'ParameterBonus':
+    def event_point_parameter_bonus(self) -> "ParameterBonus":
         return None
         return ParameterBonus(self.event_point_parameter_bonus_id + 1)
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'characters': '[' + ' ,'.join(str(c) for c in self.characters) + ']',
-            'attribute': self.attribute,
+            "characters": "[" + " ,".join(str(c) for c in self.characters) + "]",
+            "attribute": self.attribute,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'characters': '[' + ' ,'.join(str(c) for c in self.characters) + ']',
-            'attribute': self.attribute,
-            'character_match_point_bonus_value': self.character_match_point_bonus_value,
-            'attribute_match_point_bonus_value': self.attribute_match_point_bonus_value,
-            'all_match_point_bonus_value': self.all_match_point_bonus_value,
-            'character_match_parameter_bonus': self.character_match_parameter_bonus.name,
-            'character_match_parameter_bonus_value': self.character_match_parameter_bonus_value,
-            'attribute_match_parameter_bonus': self.attribute_match_parameter_bonus.name,
-            'attribute_match_parameter_bonus_value': self.attribute_match_parameter_bonus_value,
-            'all_match_parameter_bonus': self.all_match_parameter_bonus.name,
-            'all_match_parameter_bonus_value': self.all_match_parameter_bonus_value,
-            'event_point_parameter_bonus': self.event_point_parameter_bonus.name,
-            'event_point_parameter_bonus_rate': self.event_point_parameter_bonus_rate,
+            "characters": "[" + " ,".join(str(c) for c in self.characters) + "]",
+            "attribute": self.attribute,
+            "character_match_point_bonus_value": self.character_match_point_bonus_value,
+            "attribute_match_point_bonus_value": self.attribute_match_point_bonus_value,
+            "all_match_point_bonus_value": self.all_match_point_bonus_value,
+            "character_match_parameter_bonus": self.character_match_parameter_bonus.name,
+            "character_match_parameter_bonus_value": self.character_match_parameter_bonus_value,
+            "attribute_match_parameter_bonus": self.attribute_match_parameter_bonus.name,
+            "attribute_match_parameter_bonus_value": self.attribute_match_parameter_bonus_value,
+            "all_match_parameter_bonus": self.all_match_parameter_bonus.name,
+            "all_match_parameter_bonus_value": self.all_match_parameter_bonus_value,
+            "event_point_parameter_bonus": self.event_point_parameter_bonus.name,
+            "event_point_parameter_bonus_rate": self.event_point_parameter_bonus_rate,
         }
 
 

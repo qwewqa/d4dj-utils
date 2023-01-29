@@ -14,13 +14,12 @@ class ChartDesignerMaster(MasterAsset):
 
     @property
     def name_description(self) -> str:
-        return f'{self.id}'
+        return f"{self.id}"
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {'name': self.name}
+        return {"name": self.name}
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
-        return {'name': self.name}
-
+        return {"name": self.name}

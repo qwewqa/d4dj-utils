@@ -28,15 +28,12 @@ class ChartNoteCountMaster(MasterAsset):
 
     @property
     def name_description(self) -> str:
-        return f'({self.chart_id}, {self.section.name})'
+        return f"({self.chart_id}, {self.section.name})"
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {'count': self.count}
+        return {"count": self.count}
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
-        return {
-            'count': self.count,
-            'chart': self.chart
-        }
+        return {"count": self.count, "chart": self.chart}

@@ -58,26 +58,26 @@ class StockMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'category': self.category.name if self.category else None,
-            'summary': self.summary
+            "category": self.category.name if self.category else None,
+            "summary": self.summary,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'category': self.category.name if self.category else None,
-            'view': self.view,
-            'summary': self.summary,
-            'attribute': self.attribute,
-            'rarity': self.rarity,
-            'exp': self.exp,
-            'buff_character': self.buff_character,
-            'recovery_amount': self.recovery_amount,
-            'consume_amount': self.consume_amount,
-            'max_amount': self.max_amount,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'is_appropriate_sales': self.is_appropriate_sales
+            "category": self.category.name if self.category else None,
+            "view": self.view,
+            "summary": self.summary,
+            "attribute": self.attribute,
+            "rarity": self.rarity,
+            "exp": self.exp,
+            "buff_character": self.buff_character,
+            "recovery_amount": self.recovery_amount,
+            "consume_amount": self.consume_amount,
+            "max_amount": self.max_amount,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "is_appropriate_sales": self.is_appropriate_sales,
         }
 
 

@@ -18,8 +18,8 @@ class StockViewCategoryMaster(MasterAsset):
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {'name': self.name}
+        return {"name": self.name}
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
-        return {'name': self.name}
+        return {"name": self.name}

@@ -11,7 +11,7 @@ class GachaTableMaster(MasterAsset):
     card_id: int
     rate: int
 
-    db_fields = ['id', 'table_id']
+    db_fields = ["id", "table_id"]
 
     def __hash__(self):
         return self.id.__hash__()
@@ -26,15 +26,8 @@ class GachaTableMaster(MasterAsset):
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {
-            'card': self.card,
-            'rate': self.rate_value
-        }
+        return {"card": self.card, "rate": self.rate_value}
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
-        return {
-            'table_id': self.table_id,
-            'card': self.card,
-            'rate': self.rate_value
-        }
+        return {"table_id": self.table_id, "card": self.card, "rate": self.rate_value}

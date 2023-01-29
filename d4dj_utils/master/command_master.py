@@ -15,9 +15,8 @@ class CommandMaster(MasterAsset):
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {'command': self.command}
+        return {"command": self.command}
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
-        return {'command': self.command}
-
+        return {"command": self.command}

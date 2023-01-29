@@ -23,21 +23,21 @@ class SkillMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'max_recovery_value': self.max_recovery_value,
-            'combo_support_count': self.combo_support_count,
-            'score_up_rate': self.score_up_rate,
-            'perfect_score_up_rate': self.score_up_rate,
-            'max_seconds': self.max_seconds
+            "max_recovery_value": self.max_recovery_value,
+            "combo_support_count": self.combo_support_count,
+            "score_up_rate": self.score_up_rate,
+            "perfect_score_up_rate": self.score_up_rate,
+            "max_seconds": self.max_seconds,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'min_recovery_value': self.min_recovery_value,
-            'max_recovery_value': self.max_recovery_value,
-            'combo_support_count': self.combo_support_count,
-            'score_up_rate': self.score_up_rate,
-            'perfect_score_up_rate': self.perfect_score_up_rate,
-            'min_seconds': self.min_seconds,
-            'max_seconds': self.max_seconds
+            "min_recovery_value": self.min_recovery_value,
+            "max_recovery_value": self.max_recovery_value,
+            "combo_support_count": self.combo_support_count,
+            "score_up_rate": self.score_up_rate,
+            "perfect_score_up_rate": self.perfect_score_up_rate,
+            "min_seconds": self.min_seconds,
+            "max_seconds": self.max_seconds,
         }

@@ -26,7 +26,10 @@ class EventMedleySetlistMaster(MasterAsset):
 
     @property
     def specific_bonus_characters(self):
-        return [self.assets.character_master.get(cid) for cid in self.specific_bonus_character_ids]
+        return [
+            self.assets.character_master.get(cid)
+            for cid in self.specific_bonus_character_ids
+        ]
 
     @property
     def character_match_parameter_bonus(self):
@@ -39,18 +42,18 @@ class EventMedleySetlistMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'music': self.music,
-            'required_point': self.required_point,
+            "music": self.music,
+            "required_point": self.required_point,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
         return {
-            'music': self.music,
-            'start_date': self.start_datetime,
-            'end_date': self.end_datetime,
-            'order': self.order,
-            'specific_bonus_characters': self.specific_bonus_characters,
-            'character_match_parameter_bonus': self.character_match_parameter_bonus,
-            'character_match_parameter_bonus_value': self.character_match_parameter_bonus_value,
+            "music": self.music,
+            "start_date": self.start_datetime,
+            "end_date": self.end_datetime,
+            "order": self.order,
+            "specific_bonus_characters": self.specific_bonus_characters,
+            "character_match_parameter_bonus": self.character_match_parameter_bonus,
+            "character_match_parameter_bonus_value": self.character_match_parameter_bonus_value,
         }

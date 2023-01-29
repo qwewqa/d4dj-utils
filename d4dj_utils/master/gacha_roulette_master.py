@@ -23,18 +23,18 @@ class GachaRouletteMaster(MasterAsset):
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
         return {
-            'type': self.type,
-            'target_id': self.target_id,
-            'effect_value': self.effect_value,
+            "type": self.type,
+            "target_id": self.target_id,
+            "effect_value": self.effect_value,
         }
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'type': self.type,
-            'target_id': self.target_id,
-            'effect_value': self.effect_value,
-            'draw_limit': self.draw_limit,
+            "type": self.type,
+            "target_id": self.target_id,
+            "effect_value": self.effect_value,
+            "draw_limit": self.draw_limit,
         }
 
     @classmethod

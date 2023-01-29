@@ -40,16 +40,14 @@ class GachaTableRateMaster(MasterAsset):
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
-        return {
-            'tab_name': self.tab_name
-        }
+        return {"tab_name": self.tab_name}
 
     @property
     def extended_description_items(self) -> Dict[str, str]:
         return {
-            'rates': self.rates,
-            'normalized_rates': self.normalized_rates,
-            'tab_name': self.tab_name,
-            'description': self.description,
-            'rarity_ids': self.rarity_ids,
+            "rates": self.rates,
+            "normalized_rates": self.normalized_rates,
+            "tab_name": self.tab_name,
+            "description": self.description,
+            "rarity_ids": self.rarity_ids,
         }
