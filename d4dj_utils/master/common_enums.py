@@ -89,6 +89,7 @@ class GachaType(Enum):
     Normal = 0
     StepUp = 1
     Audition = 2
+    Guaranteed = 3
 
 
 class GachaCategory(Enum):
