@@ -71,12 +71,10 @@ class MasterAsset(abc.ABC):
         return "\n".join(gen_lines())
 
     @property
-    @abc.abstractmethod
     def one_line_description_items(self) -> Dict[str, Any]:
         return {}
 
     @property
-    @abc.abstractmethod
     def extended_description_items(self) -> Dict[str, Any]:
         return {}
 

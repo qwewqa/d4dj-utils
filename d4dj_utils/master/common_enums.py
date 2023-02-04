@@ -12,6 +12,8 @@ class EventType(int, Enum):
     Poker = 3
     Raid = 4
     Slot = 5
+    Growth = 6
+    Rave = 7
 
 
 class ChartSectionType(int, Enum):
@@ -98,3 +100,10 @@ class GachaCategory(Enum):
     StartDash = 5
     Revival = 6
     Special = 7
+
+
+class ParameterBonus(Enum):
+    All = 0
+    Heart = 1
+    Technique = 2
+    Physical = 3

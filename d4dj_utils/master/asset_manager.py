@@ -171,6 +171,11 @@ class AssetManager:
         self.music_mix_master: ma.MasterDict[
             Tuple[int, int], MusicMixMaster
         ] = self._load_master(MusicMixMaster)
+        from d4dj_utils.master.parameter_bonus_master import ParameterBonusMaster
+
+        self.parameter_bonus_master: ma.MasterDict[
+            int, ParameterBonusMaster
+        ] = self._load_master(ParameterBonusMaster)
         from d4dj_utils.master.passive_skill_master import PassiveSkillMaster
 
         self.passive_skill_master: ma.MasterDict[

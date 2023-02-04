@@ -2,17 +2,26 @@ import enum
 from dataclasses import dataclass
 from typing import Dict, Any, Tuple
 
+from d4dj_utils.master.common_enums import ParameterBonus
 from d4dj_utils.master.master_asset import MasterAsset
+from d4dj_utils.master.parameter_bonus_master import ParameterBonusMaster
 
 
 @dataclass
 class EventSpecificBonusMaster(MasterAsset):
-    id: int
-    character_ids: Tuple[int]
-    attribute_id: int
-    character_match_point_bonus_value: int
-    attribute_match_point_bonus_value: int
-    all_match_point_bonus_value: int
+    id: int = -1
+    character_ids: Tuple[int] = ()
+    attribute_id: int = 0
+    character_match_point_bonus_value: int = 0
+    attribute_match_point_bonus_value: int = 0
+    all_match_point_bonus_value: int = 0
+    character_match_parameter_bonus_id: int = 0
+    attribute_match_parameter_bonus_id: int = 0
+    all_match_parameter_bonus_id: int = 0
+    event_point_parameter_bonus_id: int = 0
+    event_point_parameter_bonus_rate: int = 0
+    event_point_parameter_bonus_value: int = 0
+    event_point_parameter_base_value: int = 0
 
     def __hash__(self):
         return self.id.__hash__()
@@ -26,24 +35,20 @@ class EventSpecificBonusMaster(MasterAsset):
         return self.assets.attribute_master.get(self.attribute_id)
 
     @property
-    def character_match_parameter_bonus(self) -> "ParameterBonus":
-        return None
-        return ParameterBonus(self.character_match_parameter_bonus_id)
+    def character_match_parameter_bonus(self) -> ParameterBonusMaster:
+        return self.assets.parameter_bonus_master.get(self.character_match_parameter_bonus_id)
 
     @property
-    def attribute_match_parameter_bonus(self) -> "ParameterBonus":
-        return None
-        return ParameterBonus(self.attribute_match_parameter_bonus_id)
+    def attribute_match_parameter_bonus(self) -> ParameterBonusMaster:
+        return self.assets.parameter_bonus_master.get(self.attribute_match_parameter_bonus_id)
 
     @property
-    def all_match_parameter_bonus(self) -> "ParameterBonus":
-        return None
-        return ParameterBonus(self.all_match_parameter_bonus_id)
+    def all_match_parameter_bonus(self) -> ParameterBonusMaster:
+        return self.assets.parameter_bonus_master.get(self.all_match_parameter_bonus_id)
 
     @property
-    def event_point_parameter_bonus(self) -> "ParameterBonus":
-        return None
-        return ParameterBonus(self.event_point_parameter_bonus_id + 1)
+    def event_point_parameter_bonus(self) -> ParameterBonusMaster:
+        return self.assets.parameter_bonus_master.get(self.event_point_parameter_bonus_id)
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
@@ -54,25 +59,4 @@ class EventSpecificBonusMaster(MasterAsset):
 
     @property
     def extended_description_items(self) -> Dict[str, Any]:
-        return {
-            "characters": "[" + " ,".join(str(c) for c in self.characters) + "]",
-            "attribute": self.attribute,
-            "character_match_point_bonus_value": self.character_match_point_bonus_value,
-            "attribute_match_point_bonus_value": self.attribute_match_point_bonus_value,
-            "all_match_point_bonus_value": self.all_match_point_bonus_value,
-            "character_match_parameter_bonus": self.character_match_parameter_bonus.name,
-            "character_match_parameter_bonus_value": self.character_match_parameter_bonus_value,
-            "attribute_match_parameter_bonus": self.attribute_match_parameter_bonus.name,
-            "attribute_match_parameter_bonus_value": self.attribute_match_parameter_bonus_value,
-            "all_match_parameter_bonus": self.all_match_parameter_bonus.name,
-            "all_match_parameter_bonus_value": self.all_match_parameter_bonus_value,
-            "event_point_parameter_bonus": self.event_point_parameter_bonus.name,
-            "event_point_parameter_bonus_rate": self.event_point_parameter_bonus_rate,
-        }
-
-
-class ParameterBonus(enum.Enum):
-    All = 0
-    Heart = 1
-    Technique = 2
-    Physical = 3
+        return self.one_line_description_items
