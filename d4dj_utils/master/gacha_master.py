@@ -1,11 +1,13 @@
 import dataclasses
+import datetime
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Dict, Any, Tuple, Sequence, TYPE_CHECKING, Union
+from typing import Dict, Any, Tuple, Sequence, TYPE_CHECKING, Union, Optional
 
 import msgpack
 
 from d4dj_utils.master.common_enums import GachaType, GachaCategory
+from d4dj_utils.master.event_master import EventMaster
 from d4dj_utils.master.gacha_bonus_master import GachaBonusMaster
 from d4dj_utils.master.master_asset import MasterAsset
 
@@ -133,9 +135,18 @@ class GachaMasterA(GachaMaster, MasterAsset):
             )
         ]
 
-    @property
-    def event(self):
-        return self.pick_up_cards[0].event if self.pick_up_cards else None
+    @cached_property
+    def event(self) -> Optional[EventMaster]:
+        return next(
+            (
+                event
+                for event in self.assets.event_master.values()
+                if event.start_datetime - datetime.timedelta(days=2)
+                <= self.start_datetime
+                <= event.end_datetime
+            ),
+            None,
+        )
 
     @property
     def summary(self):
@@ -291,10 +302,6 @@ class GachaMasterNew(GachaMaster, MasterAsset):
                 "SELECT id FROM GachaDrawMaster WHERE gacha_id=?", [self.id]
             )
         ]
-
-    @property
-    def event(self):
-        return self.pick_up_cards[0].event if self.pick_up_cards else None
 
     @property
     def banner_path(self):

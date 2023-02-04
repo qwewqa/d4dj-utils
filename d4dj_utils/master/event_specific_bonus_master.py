@@ -36,11 +36,15 @@ class EventSpecificBonusMaster(MasterAsset):
 
     @property
     def character_match_parameter_bonus(self) -> ParameterBonusMaster:
-        return self.assets.parameter_bonus_master.get(self.character_match_parameter_bonus_id)
+        return self.assets.parameter_bonus_master.get(
+            self.character_match_parameter_bonus_id
+        )
 
     @property
     def attribute_match_parameter_bonus(self) -> ParameterBonusMaster:
-        return self.assets.parameter_bonus_master.get(self.attribute_match_parameter_bonus_id)
+        return self.assets.parameter_bonus_master.get(
+            self.attribute_match_parameter_bonus_id
+        )
 
     @property
     def all_match_parameter_bonus(self) -> ParameterBonusMaster:
@@ -48,7 +52,9 @@ class EventSpecificBonusMaster(MasterAsset):
 
     @property
     def event_point_parameter_bonus(self) -> ParameterBonusMaster:
-        return self.assets.parameter_bonus_master.get(self.event_point_parameter_bonus_id)
+        return self.assets.parameter_bonus_master.get(
+            self.event_point_parameter_bonus_id
+        )
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
