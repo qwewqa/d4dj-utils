@@ -90,6 +90,7 @@ class GachaType(Enum):
     StepUp = 1
     Audition = 2
     Guaranteed = 3
+    Fes = 4
 
 
 class GachaCategory(Enum):
