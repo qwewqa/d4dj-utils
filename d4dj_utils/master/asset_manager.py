@@ -62,6 +62,11 @@ class AssetManager:
         self.chart_note_count_master: ma.MasterDict[
             Tuple[int, int], ChartNoteCountMaster
         ] = self._load_master(ChartNoteCountMaster)
+        from d4dj_utils.master.comic_master import ComicMaster
+
+        self.comic_master: ma.MasterDict[int, ComicMaster] = self._load_master(
+            ComicMaster
+        )
         from d4dj_utils.master.command_master import CommandMaster
 
         self.command_master: ma.MasterDict[int, CommandMaster] = self._load_master(
