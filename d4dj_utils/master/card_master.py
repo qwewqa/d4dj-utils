@@ -33,6 +33,7 @@ class CardMaster(MasterAsset):
     end_date: msgpack.Timestamp
     gacha_card_attribute: int = 0
     can_use_common_card_stack_stock: bool = False
+    is_permanent: Optional[bool] = None
 
     @classmethod
     def new(cls, *args, **kwargs):
@@ -44,6 +45,14 @@ class CardMaster(MasterAsset):
 
     def __hash__(self):
         return self.id.__hash__()
+
+    @property
+    def permanent(self):
+        # For EN compatibility
+        if self.is_permanent is not None:
+            return self.is_permanent
+        else:
+            return self.gacha_card_attribute & 1
 
     @property
     def attribute(self):
