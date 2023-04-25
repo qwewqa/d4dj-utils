@@ -55,5 +55,6 @@ class PassiveSkillType(Enum):
     FeverSupport = 2
     ScoreUpWithDamage = 3
     AutoScoreUp = 4
+    ManualScoreUp = 5
     SupportableScoreUp = 11
     SupportableSkillLonger = 12
