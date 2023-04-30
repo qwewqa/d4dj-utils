@@ -19,7 +19,7 @@ class CardMaster(MasterAsset):
     rarity_id: int
     name: str
     attribute_id: int
-    character_id: int
+    base_character_id: int
     skill_id: int
     skill_name: str
     passive_skill_id: int
@@ -59,8 +59,16 @@ class CardMaster(MasterAsset):
         return self.assets.attribute_master[self.attribute_id]
 
     @property
+    def base_character(self):
+        return self.assets.character_master[self.base_character_id]
+
+    @property
     def character(self):
-        return self.assets.character_master[self.character_id]
+        return self.base_character.latest
+
+    @property
+    def character_id(self):
+        return self.character.id
 
     @property
     def rarity(self):

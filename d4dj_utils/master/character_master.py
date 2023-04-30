@@ -14,6 +14,7 @@ class CharacterMaster(MasterAsset):
     profile_answers: Tuple[str]
     full_name_english: str
     color_code: str
+    id_histories: Tuple[int]
 
     def __hash__(self):
         return self.id.__hash__()
@@ -25,6 +26,10 @@ class CharacterMaster(MasterAsset):
     @property
     def name_description(self) -> str:
         return f"{self.full_name} ({self.id})"
+
+    @property
+    def latest(self) -> "CharacterMaster":
+        return self.assets.character_master[self.id_histories[0]]
 
     @property
     def one_line_description_items(self) -> Dict[str, Any]:
