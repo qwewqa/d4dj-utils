@@ -86,6 +86,7 @@ class ChartScoringData:
         fever_score_up: float = 0.0,
         passive_score_up: float = 0.0,
         auto_score_up: float = 0.0,
+        manual_score_up: float = 0.0,
         enable_fever: bool = True,
         disable_soflan: bool = False,
         autoplay: bool = False,
@@ -135,6 +136,8 @@ class ChartScoringData:
                 multiplier = f32(
                     f32(multiplier * f32(1.0 + auto_score_up)) * autoplay_multiplier
                 )
+            else:
+                multiplier = f32(multiplier * f32(1.0 + manual_score_up))
             combo_multiplier = f32(
                 f32(f32(combo_multiplier - 1.0) * combo_bonus_multiplier) + 1.0
             )
