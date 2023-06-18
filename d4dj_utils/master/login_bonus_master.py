@@ -79,3 +79,10 @@ class LoginBonusType(Enum):
     VipSilver = 4
     VipGold = 5
     VipPlatinum = 6
+    EventBingo = 101
+    EventMedley = 102
+    EventPoker = 103
+    EventRaid = 104
+    EventSlot = 105
+    EventGrow = 106
+    EventRave = 107
