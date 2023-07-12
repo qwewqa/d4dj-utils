@@ -141,6 +141,16 @@ class AssetManager:
         self.gacha_summary_word_master: ma.MasterDict[
             int, GachaSummaryWordMaster
         ] = self._load_master(GachaSummaryWordMaster)
+        from d4dj_utils.master.hidden_music_mix_detail_master import HiddenMusicMixDetailMaster
+
+        self.hidden_music_mix_detail_master: ma.MasterDict[
+            int, HiddenMusicMixDetailMaster
+        ] = self._load_master(HiddenMusicMixDetailMaster)
+        from d4dj_utils.master.hidden_music_mix_master import HiddenMusicMixMaster
+
+        self.hidden_music_mix_master: ma.MasterDict[
+            Tuple[int, int], HiddenMusicMixMaster
+        ] = self._load_master(HiddenMusicMixMaster)
         from d4dj_utils.master.login_bonus_item_master import LoginBonusItemMaster
 
         self.login_bonus_item_master: ma.MasterDict[

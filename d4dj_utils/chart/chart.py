@@ -13,6 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 if TYPE_CHECKING:
     from d4dj_utils.master.chart_master import ChartDifficulty, ChartMaster
     from d4dj_utils.master.music_master import MusicMaster
+    from d4dj_utils.master.music_mix_master import MusicMixMaster
 
 
 class SoflanDiskTarget(Enum):
@@ -199,12 +200,17 @@ class Chart:
         return cls(*data[0:4], info=info)
 
     @classmethod
-    def create_mix(cls, songs: List[MusicMaster], diffs: List[ChartDifficulty]):
+    def create_mix(
+        cls,
+        songs: List[MusicMaster],
+        diffs: List[ChartDifficulty],
+        mix_masters: Optional[List[MusicMixMaster]] = None,
+    ):
         try:
             from d4dj_utils.extended.chart.mix import create_mix
         except ImportError as e:
             raise RuntimeError("Extended features not available.") from e
-        return create_mix(songs, diffs)
+        return create_mix(songs, diffs, mix_masters)
 
     def trim(self, start_time: float, end_time: float, shift_time: bool = True):
         shift = -start_time if shift_time else 0
