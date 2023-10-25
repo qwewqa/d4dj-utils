@@ -60,6 +60,7 @@ class GachaMasterA(GachaMaster, MasterAsset):
     share_cash_back_rate: Any = None
     random_bonus_max_value: Any = None
     random_bonus_stock_id: Any = None
+    unknown1: Any = None
 
     def __new__(cls, *args, **kwargs):
         return object.__new__(cls)
