@@ -61,6 +61,7 @@ class GachaMasterA(GachaMaster, MasterAsset):
     random_bonus_max_value: Any = None
     random_bonus_stock_id: Any = None
     unknown1: Any = None
+    unknown2: Any = None
 
     def __new__(cls, *args, **kwargs):
         return object.__new__(cls)
