@@ -58,4 +58,4 @@ class PassiveSkillType(Enum):
     ManualScoreUp = 5
     SupportableScoreUp = 11
     SupportableSkillLonger = 12
-    Sympathy = 13
+    SupportableSympathy = 13
