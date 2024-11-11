@@ -40,6 +40,10 @@ class StampMaster(MasterAsset):
         if quote := re.search(r'[「"](.*)[」"]', self.description):
             return str(quote.group(1))
         return None
+    
+    @property
+    def stamp_path(self):
+        return self.assets.path / "ondemand" / "stamp" / f"stamp_{self.id:>07}.png"
 
     @property
     def audio_path(self):
