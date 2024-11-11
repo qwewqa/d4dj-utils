@@ -43,7 +43,7 @@ class StampMaster(MasterAsset):
     
     @property
     def stamp_path(self):
-        return self.assets.path / "ondemand" / "stamp" / f"stamp_{self.id:>07}.png"
+        return self.assets.path / f"ondemand/stamp/stamp_{self.id:>05}.png"
 
     @property
     def audio_path(self):
