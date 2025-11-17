@@ -39,11 +39,6 @@ class MusicMaster(MasterAsset):
     purchase_bonus_ids: Tuple[int]
     is_hidden: bool
     exclude_challenge: bool
-    can_fair_use: bool
-    unlock_date: msgpack.Timestamp
-    read_special_unit_name: str
-    member_list: Tuple[int]
-    song_duration_int: int
 
     def __hash__(self):
         return self.id.__hash__()
