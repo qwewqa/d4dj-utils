@@ -56,6 +56,9 @@ class PassiveSkillType(Enum):
     ScoreUpWithDamage = 3
     AutoScoreUp = 4
     ManualScoreUp = 5
+    LifeProtect = 6
+    TapHealing = 7
+    ComboBoost = 8
     SupportableScoreUp = 11
     SupportableSkillLonger = 12
     SupportableSympathy = 13
