@@ -14,7 +14,7 @@ class PassiveSkillMaster(MasterAsset):
     max_value: float
     sub_value: float
     bonus_character_id: int = -1
-    extra_value: float
+    extra_value: float = 0
 
     def __hash__(self):
         return self.id.__hash__()
@@ -49,7 +49,7 @@ class PassiveSkillMaster(MasterAsset):
 
     @classmethod
     def default(cls, assets):
-        return {0: cls(assets, 0, 0, 0.0, 0.0, 0.0, 0)}
+        return {0: cls(assets, 0, 0, 0.0, 0.0, 0.0, 0, 0.0)}
 
 
 class PassiveSkillType(Enum):
