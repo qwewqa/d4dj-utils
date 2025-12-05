@@ -13,8 +13,8 @@ class PassiveSkillMaster(MasterAsset):
     min_value: float
     max_value: float
     sub_value: float
-    extra_value: float
     bonus_character_id: int = -1
+    extra_value: float
 
     def __hash__(self):
         return self.id.__hash__()
