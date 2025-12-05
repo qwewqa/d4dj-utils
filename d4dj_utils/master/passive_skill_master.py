@@ -13,6 +13,7 @@ class PassiveSkillMaster(MasterAsset):
     min_value: float
     max_value: float
     sub_value: float
+    extra_value: float
     bonus_character_id: int = -1
 
     def __hash__(self):
@@ -29,6 +30,7 @@ class PassiveSkillMaster(MasterAsset):
             "min_value": self.min_value,
             "max_value": self.max_value,
             "sub_value": self.sub_value,
+            "extra_value": self.extra_value,
         }
 
     @property
@@ -38,6 +40,7 @@ class PassiveSkillMaster(MasterAsset):
             "min_value": self.min_value,
             "max_value": self.max_value,
             "sub_value": self.sub_value,
+            "extra_value": self.extra_value,
         }
 
     @property
