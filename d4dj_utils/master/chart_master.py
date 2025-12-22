@@ -194,3 +194,4 @@ class ChartDifficulty(int, Enum):
     Normal = 2
     Hard = 3
     Expert = 4
+    Groovy = 5

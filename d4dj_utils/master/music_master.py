@@ -65,7 +65,7 @@ class MusicMaster(MasterAsset):
         charts = self.assets.chart_master
         return {
             ChartDifficulty(d): charts[self.id * 10 + d]
-            for d in range(1, 5)
+            for d in range(1, 6)
             if (self.id * 10 + d) in charts
         }
 
