@@ -65,6 +65,7 @@ class GachaMasterA(GachaMaster, MasterAsset):
     select_bonus_reduce_id: Any = None
     end_change_stock_item_id: Any = None
     end_change_stock_item_amount: Any = None
+    shortened_animation: bool = False
 
     def __new__(cls, *args, **kwargs):
         return object.__new__(cls)
