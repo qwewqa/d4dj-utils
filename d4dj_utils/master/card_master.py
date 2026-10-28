@@ -34,6 +34,7 @@ class CardMaster(MasterAsset):
     gacha_card_attribute: int = 0
     can_use_common_card_stack_stock: bool = False
     is_permanent: Optional[bool] = None
+    is_omitted_custom_profile: Optional[bool] = None
 
     @classmethod
     def new(cls, *args, **kwargs):
